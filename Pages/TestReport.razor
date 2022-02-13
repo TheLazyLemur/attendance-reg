@@ -7,8 +7,11 @@
 
 @if (Meeting is not null)
 {
-    <h1>@Meeting.FirstOrDefault()?.Name</h1>
-    <h2>@Meeting.FirstOrDefault()?.Speaker</h2>
+    <div class="space-y-2 my-2">
+        <h1 class="text-2xl">@Meeting.FirstOrDefault()?.Name</h1>
+        <h2>Speaker: @Meeting.FirstOrDefault()?.Speaker</h2>
+        <p>Topic: @Meeting.FirstOrDefault()?.Topic</p>
+    </div>
 }
 else
 {
@@ -23,7 +26,7 @@ else
        {
           <div class="flex space-x-5">
                <div>
-                   @report.Employee.Name
+                   @report.Employee.Name @report.Employee.Surname
                </div>
                <div>
                    @report.Attendance.Status

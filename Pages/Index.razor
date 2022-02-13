@@ -1,6 +1,7 @@
 @page "/"
 
-<div class="mt-10">
+<h1 class="mt-5 text-2xl">Pick An Office</h1>
+<div class="mt-5 space-y-3">
     @if (Offices is not null)
     {
         if (Offices.Any())
@@ -8,7 +9,7 @@
             @foreach (var office in Offices)
             {
                 <div>
-                    <button @onclick="@(() => {AppState.SaveOfficeId(office.Id.ToString()) ;NavigationManager.NavigateTo("dashboard");})">@office.Name Office</button>
+                    <button class="hover:text-blue-500" @onclick="@(() => {AppState.SaveOfficeId(office.Id.ToString()) ;NavigationManager.NavigateTo("dashboard");})">@office.Name Office</button>
                 </div>
             }
         }

@@ -2,18 +2,19 @@
 @using attendance_reg.Pages.Envoys
 
 
-<div class="mt-5">
+<h1 class="mt-5 text-2xl">Meetings</h1>
+<div class="mt-5 space-y-3">
     @if (Meetings is not null)
     {
         if (Meetings.Any())
         {
             @foreach (var meeting in Meetings)
             {
-                <div class="flex">
+                <div class="flex space-x-3">
                     <div>
-                        <a href="meeting/@meeting.Id">@meeting.Name</a>
+                        <a class="hover:text-blue-500" href="meeting/@meeting.Id">@meeting.Name</a>
                     </div>
-                    <button class="text-xs text-gray-400" @onclick="@(() => {NavigationManager.NavigateTo($"report/{meeting.Id}");})">View Report</button>
+                    <button class="text-xs text-gray-400 hover:text-gray-600" @onclick="@(() => {NavigationManager.NavigateTo($"report/{meeting.Id}");})">View Report</button>
                 </div>
             }
         }
