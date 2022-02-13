@@ -20,7 +20,7 @@ public class AuthenticationEnvoy
 
       var httpClient = new HttpClient();
 
-      var result = await httpClient.PostAsync("http://localhost:8000/login",
+      var result = await httpClient.PostAsync("https://hardcore-mclean-4d100a.netlify.app/.netlify/functions/login",
          new StringContent("daniel"));
 
       var response = await result.Content.ReadAsStringAsync();
