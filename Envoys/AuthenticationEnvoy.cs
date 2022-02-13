@@ -20,7 +20,7 @@ public class AuthenticationEnvoy
 
       var httpClient = new HttpClient();
 
-      var result = await httpClient.GetAsync("https://hardcore-mclean-4d100a.netlify.app/.netlify/functions/login?credentials=daniel");
+      var result = await httpClient.GetAsync("https://holborn-za-attendance.netlify.app/.netlify/functions/login?credentials=daniel");
 
       var response = await result.Content.ReadAsStringAsync();
       var token = JsonSerializer.Deserialize<TokenResponse>(response);
