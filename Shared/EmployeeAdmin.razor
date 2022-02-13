@@ -1,0 +1,59 @@
+@using Microsoft.AspNetCore.Components
+@using attendance_reg.Pages
+@using attendance_reg.Pages.Envoys
+<section>
+    <h2 class="">Employees</h2>
+    <table>
+        @if (_employees is not null)
+        {
+            @if (_employees.Count > 0)
+            {
+                <tr class="text-left">
+                    <th>Name</th>
+                </tr>
+                @foreach (var employee in _employees)
+                {
+                    <tr>
+                        <td>@employee.Name @employee.Surname</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <div>Nothing Found</div>
+            }
+        }
+        else
+        {
+            <div>Loading...</div>
+        }
+    </table>
+    
+    <div class="flex mt-3">
+        <button @onclick="@(() => { _displayModal = true; })" class="bg-blue-500 px-3 py-2 rounded-md text-white">Add</button>
+    </div>
+
+    <Modal DisplayModal="@_displayModal">
+          <button @onclick="@(() => { _displayModal = false; })" class="close"><span class="close">&times;</span></button>
+        <EditForm Model="@_employee" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+            <div class="flex flex-col space-y-5">
+                <div class="flex space-x-5">
+                    <label for="name">Name</label>
+                    <InputText class="border rounded-md" id="name" @bind-Value="_employee.Name"/>
+                </div>
+                <div class="space-x-5">
+                    <label for="surname">Surname</label>
+                    <InputText class="border rounded-md" id="surname" @bind-Value="_employee.Surname"/>
+                </div>
+                <div class="flex space-x-5">
+                    <label for="title">Title</label>
+                    <InputText class="border rounded-md" id="title" @bind-Value="_employee.Title"/>
+                </div>
+                <button class="w-24 border border-blue-500 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Submit</button>
+            </div>
+        </EditForm>
+    </Modal>
+    
+</section>

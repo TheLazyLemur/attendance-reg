@@ -1,0 +1,16 @@
+<!-- The Modal -->
+<div id="myModal" class="modal @(!DisplayModal ? "hidden" : "block")">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        @ChildContent
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public bool DisplayModal { get; set; }
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

@@ -1,0 +1,24 @@
+@page "/"
+
+<div class="mt-10">
+    @if (Offices is not null)
+    {
+        if (Offices.Any())
+        {
+            @foreach (var office in Offices)
+            {
+                <div>
+                    <button @onclick="@(() => {AppState.SaveOfficeId(office.Id.ToString()) ;NavigationManager.NavigateTo("dashboard");})">@office.Name Office</button>
+                </div>
+            }
+        }
+        else
+        {
+            <div>Nothing found</div>
+        }
+    }
+    else
+    {
+            <div>Loading...</div>
+    }
+</div>

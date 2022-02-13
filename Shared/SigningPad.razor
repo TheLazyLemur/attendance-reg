@@ -1,0 +1,55 @@
+<Modal DisplayModal="@_displayModal">
+     <div>
+          <button class="" @onclick="@(Init)">Init</button>
+          <canvas height="200" width="300" class="border" id="@Id">
+          </canvas>
+          <button @onclick="@(SaveSignature)">Save</button>
+     </div>
+</Modal>
+
+
+<div @onclick="@(() => { _displayModal = true;})" class="w-[50px] h-[30px] bg-gray-100">
+     <img class="h-full w-full" src="@src" alt="">
+</div>
+
+@code{
+
+     [Inject]
+     private IJSRuntime JsRuntime { get; set; }
+     
+     [Parameter]
+     public string Id { get; set; }
+     
+     [Parameter]
+     public int EmployeeId { get; set; }
+     
+     [Parameter]
+     public EventCallback<Dictionary<string, string>> SaveDataUrl { get; set; }
+
+     private string src;
+     private bool _displayModal;
+     
+
+     public async Task Init()
+     {
+          await JsRuntime.InvokeVoidAsync("loadSig", Id);
+     }
+
+     public async Task SaveSignature()
+     {
+          var result = await JsRuntime.InvokeAsync<string>("saveSig");
+          src = result;
+          
+          _displayModal = false;
+          var dict = new Dictionary<string, string>
+          {
+               {"employeeId", EmployeeId.ToString()},
+               {"dataUrl", result}
+          };
+
+          await SaveDataUrl.InvokeAsync(dict);
+          await InvokeAsync(StateHasChanged);
+     }
+
+}
+

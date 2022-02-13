@@ -1,0 +1,66 @@
+﻿@page "/meeting/{id}"
+
+
+<div class="font-bold underline mt-5">Meeting Attendance Register</div>
+
+<section class="flex-1 overflow-auto py-2 mt-2 flex">
+    <div class="flex flex-col space-y-3 border p-2 flex-1">
+        <div class="grid grid-cols-2">
+        @foreach (var employee in _employees)
+        {
+            <div class="w-full flex justify-middle space-x-10 space-y-3">
+                <div class="my-auto w-48">
+                    @employee.Name @employee.Surname 
+                </div>
+                <SigningPad SaveDataUrl="@(Save)" EmployeeId="@(employee.Id.Value)" Id="@employee.Name"/>
+                <div>
+                    <select @onchange="@(e => { UpdateStatus(employee.Id, e.Value.ToString()); })" class="h-full bg-white" name="status-@employee.Name-@employee.Surname" id="status-@employee.Name-@employee.Surname">
+                        @if (_statuses is not null)
+                        {
+                            @foreach (var status in _statuses)
+                            {
+                                <option value="@status.Name">@status.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+</section>
+
+<section class="flex flex-col w-full my-3 space-y-3">
+    <div class="flex space-x-5">
+        <div>
+            <label for="speaker">Speaker</label>
+            <input @bind="@_speaker" class="border border-gray-400 px-2" id="speaker" type="text">
+        </div>
+        <div>
+            <label for="company">Company</label>
+            <input class="border border-gray-400 px-2 w-[300px]" id="company" type="text">
+        </div>
+    </div>
+    <label for="topic">Topic</label>
+    <input @bind="@_topic" class="border border-gray-400 px-2" id="topic" type="text">
+
+    <div class="flex space-x-5">
+        <div>
+            <label class="my-auto" for="product-training">Product Training</label>
+            <input class="my-auto" id="product-training" type="checkbox">
+        </div>
+
+        <div>
+            <label class="my-auto" for="asset-management">Asset Management Presentation</label>
+            <input class="my-auto" id="asset-management" type="checkbox">
+        </div>
+
+        <div>
+            <label class="my-auto" for="internal-training">Internal Training</label>
+            <input class="my-auto" id="internal-training" type="checkbox">
+        </div>
+    </div>
+        <div>
+            <button @onclick="@(async () => { await SendToServer(); })">End Meeting</button>
+        </div>
+</section>

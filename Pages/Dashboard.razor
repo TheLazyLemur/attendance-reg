@@ -1,0 +1,47 @@
+@page "/Dashboard"
+@using attendance_reg.Pages.Envoys
+
+
+<div class="mt-5">
+    @if (Meetings is not null)
+    {
+        if (Meetings.Any())
+        {
+            @foreach (var meeting in Meetings)
+            {
+                <div>
+                    <a href="meeting/@meeting.Id">@meeting.Name</a>
+                </div>
+            }
+        }
+        else
+        {
+            <div>Nothing Found</div>
+        }
+    }
+    else
+    {
+        <div>Loading...</div>
+    }
+</div>
+<div class="my-5 flex space-x-5">
+    <button class="bg-blue-500 text-white py-2 px-3 rounded-lg">New Meeting</button>
+    <button @onclick="@(() => { NavigationManager.NavigateTo("admin"); })" class="bg-blue-500 text-white py-2 px-3 rounded-lg">Admin</button>
+</div>
+
+@code {
+
+    [Inject]
+    public MeetingEnvoy? MeetingEnvoy { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    private List<Meeting>? Meetings { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Meetings = await MeetingEnvoy?.GetMeetings()!;
+    }
+
+}
