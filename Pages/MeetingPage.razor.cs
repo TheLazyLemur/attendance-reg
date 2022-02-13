@@ -67,7 +67,7 @@ public partial class MeetingPage
         _signatures.TryAdd(employeeId, new MeetingSignature
         {
             DataUrl = values["dataUrl"],
-            MeetingId = Id,
+            MeetingId = int.Parse(Id),
             EmployeeId = int.Parse(values["employeeId"])
         });
         

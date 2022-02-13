@@ -1,0 +1,59 @@
+@page "/report/{meetingId}"
+@using attendance_reg.Pages.Envoys
+
+@inject MeetingReportService MeetingReportService
+@inject MeetingEnvoy MeetingEnvoy
+
+
+@if (Meeting is not null)
+{
+    <h1>@Meeting.FirstOrDefault()?.Name</h1>
+    <h2>@Meeting.FirstOrDefault()?.Speaker</h2>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+@if (FinalReports is not null)
+{
+    if (FinalReports.Count > 0)
+    {
+       @foreach (var report in FinalReports)
+       {
+          <div class="flex space-x-5">
+               <div>
+                   @report.Employee.Name
+               </div>
+               <div>
+                   @report.Attendance.Status
+               </div>
+               <div class="h-10 w-10">
+                   <img class="object-cover h-full w-full" src="@report.Signature.DataUrl" alt="">
+               </div>
+           </div>
+       } 
+    }
+}
+else
+{
+    <div>Loading...</div> 
+}
+
+@code{
+
+    [Parameter]
+    public string? MeetingId { get; set; }
+    
+    private List<FinalReport>? FinalReports { get; set; }
+    private List<Meeting>? Meeting { get; set; }
+
+    protected override async void OnInitialized()
+    {
+        Meeting = await MeetingEnvoy.GetMeeting(MeetingId);
+        StateHasChanged();
+        FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
+        StateHasChanged();
+    }
+
+}

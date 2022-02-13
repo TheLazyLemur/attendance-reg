@@ -21,5 +21,6 @@ builder.Services.AddScoped<MeetingEnvoy>();
 builder.Services.AddScoped<SignatureEnvoy>();
 builder.Services.AddScoped<OfficeEnvoy>();
 builder.Services.AddScoped<AppState>();
+builder.Services.AddScoped<MeetingReportService>();
 
 await builder.Build().RunAsync();
