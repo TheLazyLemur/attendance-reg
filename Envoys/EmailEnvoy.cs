@@ -11,7 +11,7 @@ public class EmailEnvoy
       {
          Method = HttpMethod.Post,
          RequestUri = new Uri("https://holborn-za-attendance.netlify.app/.netlify/functions/email"),
-         Content = new StringContent($"{{\n    \"personalizations\": [\n        {{\n            \"to\": [\n                {{\n                    \"email\": \"{to}\"\n                }}\n            ],\n            \"subject\": \"{subject}\"\n        }}\n    ],\n    \"from\": {{\n        \"email\": \"from_address@example.com\"\n    }},\n    \"content\": [\n        {{\n            \"type\": \"text/plain\",\n            \"value\": \"{content}\"\n        }}\n    ]\n}}")
+         Content = new StringContent("{\n    \"personalizations\": [\n        {\n            \"to\": [\n                {\n                    \"email\": \"danrousseau@protonmail.com\"\n                }\n            ],\n            \"subject\": \"{asdajpasdasdasdasdasdasdasd}\"\n        }\n    ],\n    \"from\": {\n        \"email\": \"from_address@example.com\"\n    },\n    \"content\": [\n        {\n            \"type\": \"text/plain\",\n            \"value\": \"asodjnaiod adhnoasd ojwqojwi oasdjodjoqwie qo asodoiqwhr0qwpdaps dphwoqheoqw \"\n        }\n    ]\n}")
          {
             Headers =
             {
