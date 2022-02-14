@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -29,7 +31,7 @@ type Content struct {
 	Value string `json:"value"`
 }
 
-func main() {
+func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
 
 	from := From{
@@ -70,4 +72,16 @@ func main() {
 
 	fmt.Println(res)
 	fmt.Println(string(body))
+
+	return &events.APIGatewayProxyResponse{
+		StatusCode:        200,
+		Headers:           map[string]string{"Content-Type": "text/plain"},
+		MultiValueHeaders: http.Header{"Set-Cookie": {"Ding", "Ping"}},
+		Body:              "ok",
+		IsBase64Encoded:   false,
+	}, nil
+}
+
+func main() {
+	lambda.Start(handler)
 }
