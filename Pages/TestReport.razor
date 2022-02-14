@@ -59,7 +59,7 @@ else
         StateHasChanged();
         FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
         StateHasChanged();
-        await EmailEnvoy.Send("danrousseau@protonmail.com", Meeting.FirstOrDefault().Name, JsonSerializer.Serialize(FinalReports, new JsonSerializerOptions{WriteIndented = false}));
+        await EmailEnvoy.Send("danrousseau@protonmail.com", Meeting.FirstOrDefault().Name, JsonSerializer.Serialize(FinalReports, new JsonSerializerOptions{WriteIndented = true}));
     }
 
 }

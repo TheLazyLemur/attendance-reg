@@ -1,23 +1,60 @@
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace attendance_reg.Pages.Envoys;
+
+public class To
+{
+   public string email { get; set; }
+}
+
+public class Personalization
+{
+   public List<To> to { get; set; }
+   public string subject { get; set; }
+}
+
+public class From
+{
+   public string email { get; set; }
+}
+
+public class Content
+{
+   public string type { get; set; }
+   public string value { get; set; }
+}
+
+public class Root
+{
+   public List<Personalization> personalizations { get; set; }
+   public From from { get; set; }
+   public List<Content> content { get; set; }
+}
+
 
 public class EmailEnvoy
 {
    public async Task Send(string to, string subject, string content)
    {
+      var email = new Root();
+      email.personalizations.Add(new Personalization
+      {
+         to = new List<To> { new To { email = to } },
+         subject = subject
+      });
+
+      email.from = new From {email = "testSign@demo.com"};
+      email.content.Add(new Content {type = "text/plain", value = content});
+      
+      
       var client = new HttpClient();
       var request = new HttpRequestMessage
       {
          Method = HttpMethod.Post,
          RequestUri = new Uri("https://holborn-za-attendance.netlify.app/.netlify/functions/email"),
-         Content = new StringContent("{\n    \"personalizations\": [\n        {\n            \"to\": [\n                {\n                    \"email\": \"danrousseau@protonmail.com\"\n                }\n            ],\n            \"subject\": \"{asdajpasdasdasdasdasdasdasd}\"\n        }\n    ],\n    \"from\": {\n        \"email\": \"from_address@example.com\"\n    },\n    \"content\": [\n        {\n            \"type\": \"text/plain\",\n            \"value\": \"asodjnaiod adhnoasd ojwqojwi oasdjodjoqwie qo asodoiqwhr0qwpdaps dphwoqheoqw \"\n        }\n    ]\n}")
-         {
-            Headers =
-            {
-               ContentType = new MediaTypeHeaderValue("application/json")
-            }
-         }
+         Content = new StringContent(JsonSerializer.Serialize(email))
       };
       using (var response = await client.SendAsync(request))
       {
