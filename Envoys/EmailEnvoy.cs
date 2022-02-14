@@ -38,20 +38,28 @@ public class EmailEnvoy
 {
    public async Task Send(string to, string subject, string content)
    {
-      var email = new Root();
-      email.personalizations = new List<Personalization>
+      var email = new Root
       {
-         new()
+         personalizations = new List<Personalization>
          {
-            to = new List<To> { new To { email = to } },
-            subject = subject
+            new()
+            {
+               to = new List<To> { new To { email = to } },
+               subject = subject
+            }
+         },
+         @from = new From {email = "testSign@demo.com"},
+         content = new List<Content>
+         {
+            new()
+            {
+               type = "text/plain",
+               value = content
+            }
          }
       };
 
-      email.from = new From {email = "testSign@demo.com"};
-      email.content.Add(new Content {type = "text/plain", value = content});
-      
-      
+
       var client = new HttpClient();
       var request = new HttpRequestMessage
       {
