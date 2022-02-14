@@ -35,7 +35,7 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 
 	params := request.QueryStringParameters
 
-	if params["credentials"] != "" {
+	if params["to"] != "" {
 		to_email := params["to"]
 		subject_email := params["subject"]
 		content_email := params["content"]
