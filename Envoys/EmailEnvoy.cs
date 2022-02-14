@@ -2,11 +2,11 @@ namespace attendance_reg.Pages.Envoys;
 
 public class EmailEnvoy
 {
-   public async Task Send()
+   public async Task Send(string to, string subject, string content)
    {
       var httpClient = new HttpClient();
 
-      var result = await httpClient.GetAsync("https://holborn-za-attendance.netlify.app/.netlify/functions/email?to=danielrousseau@protonmail.com&subject=testing123&content=hello,World123456");
+      var result = await httpClient.GetAsync(new Uri($"https://holborn-za-attendance.netlify.app/.netlify/functions/email?to={to}&subject={subject}&content={content}"));
 
       result.EnsureSuccessStatusCode();
       
