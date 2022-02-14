@@ -14,6 +14,7 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 
 builder.Services.AddScoped<AuthenticationEnvoy>();
+builder.Services.AddScoped<EmailEnvoy>();
 builder.Services.AddScoped<SupabaseEnvoy>();
 builder.Services.AddScoped<EmployeeEnvoy>();
 builder.Services.AddScoped<StatusEnvoy>();

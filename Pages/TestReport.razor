@@ -3,6 +3,7 @@
 
 @inject MeetingReportService MeetingReportService
 @inject MeetingEnvoy MeetingEnvoy
+@inject EmailEnvoy EmailEnvoy
 
 
 @if (Meeting is not null)
@@ -57,6 +58,7 @@ else
         StateHasChanged();
         FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
         StateHasChanged();
+        await EmailEnvoy.Send();
     }
 
 }
