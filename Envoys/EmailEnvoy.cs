@@ -42,7 +42,7 @@ public class EmailEnvoy
          {
             new()
             {
-               to = new List<To> { new To { email = to } },
+               to = new List<To> { new() { email = to } },
                subject = subject
             }
          },
@@ -51,7 +51,7 @@ public class EmailEnvoy
          {
             new()
             {
-               type = "text/plain",
+               type = "text/html",
                value = content
             }
          }

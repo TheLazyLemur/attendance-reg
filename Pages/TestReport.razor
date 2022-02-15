@@ -1,85 +1,118 @@
 @page "/report/{meetingId}"
 @using attendance_reg.Pages.Envoys
-@using System.Text.Json
+@using System.Text
 
 @inject MeetingReportService MeetingReportService
 @inject MeetingEnvoy MeetingEnvoy
 @inject EmailEnvoy EmailEnvoy
 
 
-@if (Meeting is not null)
-{
-    <div class="space-y-2 my-2">
-        <h1 class="text-2xl">@Meeting.FirstOrDefault()?.Name</h1>
-        <h2>Speaker: @Meeting.FirstOrDefault()?.Speaker</h2>
-        <p>Topic: @Meeting.FirstOrDefault()?.Topic</p>
-    </div>
-}
-else
-{
-    <div>Loading...</div>
-}
+<div class="flex w-full h-full">
+    <div class="m-auto space-y-3">
+        @if (Meeting is not null)
+        {
+            <div class="space-y-2 my-2">
+                <h1 class="text-2xl">@Meeting.FirstOrDefault()?.Name</h1>
+                <h2>Speaker: @Meeting.FirstOrDefault()?.Speaker</h2>
+                <p>Topic: @Meeting.FirstOrDefault()?.Topic</p>
+            </div>
+        }
+        else
+        {
+            <div>Loading...</div>
+        }
 
-@if (FinalReports is not null)
-{
-    if (FinalReports.Count > 0)
-    {
-       @foreach (var report in FinalReports)
-       {
-          <div class="flex space-x-5">
-               <div>
-                   @report.Employee.Name @report.Employee.Surname
-               </div>
-               <div>
-                   @report.Attendance.Status
-               </div>
-               <div class="h-10 w-10">
-                   <img class="object-cover h-full w-full" src="@report.Signature.DataUrl" alt="">
-               </div>
-           </div>
-       } 
-        <button @onclick="@(async () => { await EmailReport();})" class="mt-5 w-24 border border-blue-500 rounded-lg bg-blue-500 text-white">Email Report</button>
-    }
-}
-else
-{
-    <div>Loading...</div> 
-}
+        @if (FinalReports is not null)
+        {
+            if (FinalReports.Count > 0)
+            {
+                @foreach (var report in FinalReports)
+                {
+                    <div class="flex space-x-5">
+                        <div>
+                            @report.Employee.Name @report.Employee.Surname
+                        </div>
+                        <div>
+                            @report.Attendance.Status
+                        </div>
+                        <div class="h-10 w-10">
+                            <img class="object-cover h-full w-full" src="@report.Signature.DataUrl" alt="">
+                        </div>
+                    </div>
+                }
+                <button @onclick="@(async () => { await EmailReport(); })" class="mt-5 w-24 border border-blue-500 rounded-lg bg-blue-500 text-white">Email Report</button>
+            }
+        }
+        else
+        {
+            <div>Loading...</div>
+        }
+    </div>
+</div>
 
 @code{
 
     [Parameter]
     public string? MeetingId { get; set; }
-    
+
     [CascadingParameter]
     public IModalService? Modal { get; set; }
-    
+
     private List<FinalReport>? FinalReports { get; set; }
     private List<Meeting>? Meeting { get; set; }
 
-    protected override async void OnInitialized()
+    protected override void OnInitialized()
     {
-        Meeting = await MeetingEnvoy.GetMeeting(MeetingId);
-        StateHasChanged();
-        FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
-        FinalReports = FinalReports.DistinctBy(it => it.Employee.Id).ToList();
-        StateHasChanged();
+        Task.Run(async () =>
+        {
+            Meeting = await MeetingEnvoy.GetMeeting(MeetingId);
+            await InvokeAsync(StateHasChanged);
+        });
+
+        Task.Run(async () =>
+        {
+            FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
+            FinalReports = FinalReports.DistinctBy(it => it.Employee.Id).ToList();
+            await InvokeAsync(StateHasChanged);
+        });
     }
 
     private async Task EmailReport()
     {
         var parameters = new ModalParameters();
-        
+
         var modalRef = Modal?.Show<EmailModal>("Enter Email", parameters);
         var modalResult = await modalRef?.Result!;
-        
-        if(modalResult.Cancelled)
+
+        if (modalResult.Cancelled)
             return;
 
         var emailAddress = modalResult.Data as string;
         Console.WriteLine(emailAddress);
+        var x = BuildHtml(Meeting.FirstOrDefault(), FinalReports);
+        await EmailEnvoy.Send(emailAddress, Meeting.FirstOrDefault().Name, x);
+    }
 
-        await EmailEnvoy.Send(emailAddress, Meeting.FirstOrDefault().Name, JsonSerializer.Serialize(FinalReports, new JsonSerializerOptions {WriteIndented = true}));
+    public string BuildHtml(Meeting meeting, List<FinalReport> finalReports)
+    {
+        var sb = new StringBuilder();
+        
+        sb.Append("<div>");
+        sb.Append("<h1>");
+        sb.Append(meeting.Name);
+        sb.Append("</h1>");
+        finalReports.ForEach(it =>
+        {
+            sb.Append("<div>");
+            sb.Append($"<p>");
+            sb.Append(it.Employee.Name + " " + it.Employee.Surname + ":" + it.Attendance.Status);
+            sb.Append($"</p>");
+            sb.Append($"<img src='{it.Signature.DataUrl}'/>");
+            sb.Append("</div>");
+        });
+        sb.Append("</div>");
+
+        return sb.ToString();
     }
 
 }

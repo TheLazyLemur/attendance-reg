@@ -10,21 +10,3 @@
     </div>
     <button class="w-24 border border-blue-500 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Submit</button>
 </EditForm>
-
-@code{
-
-    class EmailEntry
-    {
-        public string Email;
-    }
-    
-     [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
-
-    private EmailEntry _emailEntry = new();
-    
-    private async Task HandleValidSubmit()
-    {
-        await ModalInstance.CloseAsync(ModalResult.Ok(_emailEntry.Email));
-    }
-
-}
