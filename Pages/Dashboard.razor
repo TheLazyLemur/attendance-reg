@@ -1,8 +1,8 @@
 @page "/Dashboard"
 
 <div class="h-full w-full flex">
-<div class="m-auto space-y-3">
-    <h1 class="mt-5 text-2xl">Meetings</h1>
+<div class="space-y-3">
+    <h1 class="mt-5 text-3xl">Meetings</h1>
     <div class="mt-5 space-y-3">
         @if (Meetings is not null)
         {
@@ -14,7 +14,7 @@
                         <div>
                             <a class="hover:text-blue-500" href="meeting/@meeting.Id">@meeting.Name</a>
                         </div>
-                        <button class="text-xs text-gray-400 hover:text-gray-600" @onclick="@(() => { NavigationManager.NavigateTo($"report/{meeting.Id}"); })">View Report</button>
+                        <button class="text-xs text-gray-400 hover:text-gray-600 my-auto" @onclick="@(() => { NavigationManager.NavigateTo($"report/{meeting.Id}"); })">View Report</button>
                         <button class="px-2 py-1 text-white bg-red-500 rounded" @onclick="@(async () => { MeetingEnvoy.DeleteMeeting(meeting.Id.Value);})">X</button>
                     </div>
                 }

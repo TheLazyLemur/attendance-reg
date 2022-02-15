@@ -46,7 +46,7 @@ public class EmailEnvoy
                subject = subject
             }
          },
-         @from = new From {email = "testSign@demo.com"},
+         @from = new From {email = "test@demo.com"},
          content = new List<Content>
          {
             new()
