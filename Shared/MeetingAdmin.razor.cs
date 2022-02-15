@@ -1,5 +1,7 @@
 using attendance_reg.Pages;
 using attendance_reg.Pages.Envoys;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace attendance_reg.Shared;
@@ -7,9 +9,10 @@ namespace attendance_reg.Shared;
 public partial class MeetingAdmin
 {
     [Inject] public MeetingEnvoy? MeetingEnvoy { get; set; }
+    [CascadingParameter] public IModalService? Modal { get; set; }
     
     private bool _displayModal = false;
-    private readonly Meeting _meeting = new();
+    private readonly Meeting? _meeting = new();
 
     private List<Meeting>? _meetings;
 
@@ -17,11 +20,20 @@ public partial class MeetingAdmin
     {
       _meetings = await MeetingEnvoy?.GetMeetings()!;
     }
-    
-    private async Task HandleValidSubmit()
+
+    async Task ShowAddMeeting()
     {
-        await MeetingEnvoy?.AddStatus(_meeting)!;
-        _meetings = await MeetingEnvoy.GetMeetings();
-        await InvokeAsync(StateHasChanged);
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(MeetingAdminModal.MeetingEnvoy), MeetingEnvoy);
+        parameters.Add(nameof(MeetingAdminModal.Meeting), _meeting);
+
+        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters);
+        var modalResult = await modalRef?.Result!;
+        
+        if(modalResult.Cancelled)
+            return;
+        
+        _meetings = await MeetingEnvoy?.GetMeetings()!;
+        StateHasChanged();
     }
 }

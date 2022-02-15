@@ -7,7 +7,7 @@ public partial class Admin
     [Inject] public Envoys.EmployeeEnvoy _emplyeeEnvoy { get; set; }
     
     private bool displayModal = false;
-    private Employee _employee = new();
+    private Employee? _employee = new();
 
     private List<Employee>? _employees;
 

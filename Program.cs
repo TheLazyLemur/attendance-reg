@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using attendance_reg;
 using attendance_reg.Pages;
 using attendance_reg.Pages.Envoys;
+using Blazored.Modal;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -23,5 +24,7 @@ builder.Services.AddScoped<SignatureEnvoy>();
 builder.Services.AddScoped<OfficeEnvoy>();
 builder.Services.AddScoped<AppState>();
 builder.Services.AddScoped<MeetingReportService>();
+builder.Services.AddBlazoredModal();
+
 
 await builder.Build().RunAsync();

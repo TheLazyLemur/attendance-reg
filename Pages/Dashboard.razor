@@ -29,35 +29,14 @@
     }
 </div>
 <div class="my-5 flex space-x-5">
-    <button @onclick="@(() => {_displayModal = true; StateHasChanged();})" class="bg-blue-500 text-white py-2 px-3 rounded-lg">New Meeting</button>
+    <button @onclick="@(async () => {await ShowAddMeeting();})" class="bg-blue-500 text-white py-2 px-3 rounded-lg">New Meeting</button>
     <button @onclick="@(() => { NavigationManager.NavigateTo("admin"); })" class="bg-blue-500 text-white py-2 px-3 rounded-lg">Admin</button>
 </div>
 
-      <Modal DisplayModal="@_displayModal">
-          <button @onclick="@(() => { _displayModal = false; })" class="close"><span class="close">&times;</span></button>
-          <EditForm Model="@_meeting" OnValidSubmit="@HandleValidSubmit">
-              <DataAnnotationsValidator />
-              <ValidationSummary />
-          
-              <div class="flex flex-col space-y-5 my-5">
-                  <div class="flex space-x-5">
-                      <label for="name">Meeting Title</label>
-                      <InputText class="border rounded-md" id="name" @bind-Value="_meeting.Name"/>
-                  </div>
-                  <div class="flex space-x-5">
-                      <label for="topic">Meeting Topic</label>
-                      <InputText class="border rounded-md" id="topic" @bind-Value="_meeting.Topic"/>
-                  </div>
-                  <div class="flex space-x-5">
-                      <label for="speaker">Meeting Speaker</label>
-                      <InputText class="border rounded-md" id="speaker" @bind-Value="_meeting.Speaker"/>
-                  </div>
-              </div>
-              <button class="w-24 border border-blue-500 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Submit</button>
-          </EditForm>
-      </Modal>
 @code {
 
+    [CascadingParameter] public IModalService? Modal { get; set; }
+    
     [Inject]
     public MeetingEnvoy? MeetingEnvoy { get; set; }
 
@@ -66,18 +45,27 @@
 
     private List<Meeting>? Meetings { get; set; }
     private bool _displayModal = false;
-    private readonly Meeting _meeting = new();
+    private readonly Meeting? _meeting = new();
 
     protected override async Task OnInitializedAsync()
     {
         Meetings = await MeetingEnvoy?.GetMeetings()!;
     }
     
-    private async Task HandleValidSubmit()
+    async Task ShowAddMeeting()
     {
-        await MeetingEnvoy?.AddStatus(_meeting)!;
-        Meetings = await MeetingEnvoy.GetMeetings();
-        await InvokeAsync(StateHasChanged);
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(MeetingAdminModal.MeetingEnvoy), MeetingEnvoy);
+        parameters.Add(nameof(MeetingAdminModal.Meeting), _meeting);
+
+        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters);
+        var modalResult = await modalRef?.Result!;
+        
+        if(modalResult.Cancelled)
+            return;
+        
+        Meetings = await MeetingEnvoy?.GetMeetings()!;
+        StateHasChanged();
     }
 
 }

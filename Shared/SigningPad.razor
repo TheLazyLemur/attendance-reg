@@ -1,55 +1,44 @@
-<Modal DisplayModal="@_displayModal">
-     <div>
-          <button class="" @onclick="@(Init)">Init</button>
-          <canvas height="200" width="300" class="border" id="@Id">
-          </canvas>
-          <button @onclick="@(SaveSignature)">Save</button>
-     </div>
-</Modal>
-
-
-<div @onclick="@(() => { _displayModal = true;})" class="w-[50px] h-[30px] bg-gray-100">
-     <img class="h-full w-full" src="@src" alt="">
+<div @onclick="@(async () => { await ShowSigModal();})" class="w-[50px] h-[30px] bg-gray-100">
+    <img class="h-full w-full" src="@src" alt=""/>
 </div>
 
 @code{
 
      [Inject]
      private IJSRuntime JsRuntime { get; set; }
-     
-     [Parameter]
-     public string Id { get; set; }
-     
-     [Parameter]
-     public int EmployeeId { get; set; }
-     
-     [Parameter]
-     public EventCallback<Dictionary<string, string>> SaveDataUrl { get; set; }
+    
+    [CascadingParameter]
+    public IModalService? Modal { get; set; }
 
-     private string src;
-     private bool _displayModal;
-     
+    [Parameter]
+    public string Id { get; set; }
 
-     public async Task Init()
-     {
-          await JsRuntime.InvokeVoidAsync("loadSig", Id);
-     }
+    [Parameter]
+    public int EmployeeId { get; set; }
 
-     public async Task SaveSignature()
-     {
-          var result = await JsRuntime.InvokeAsync<string>("saveSig");
-          src = result;
-          
-          _displayModal = false;
-          var dict = new Dictionary<string, string>
-          {
-               {"employeeId", EmployeeId.ToString()},
-               {"dataUrl", result}
-          };
+    [Parameter]
+    public EventCallback<Dictionary<string, string>> SaveDataUrl { get; set; }
 
-          await SaveDataUrl.InvokeAsync(dict);
-          await InvokeAsync(StateHasChanged);
-     }
+    private string src { get; set; }
+    
+    private async Task ShowSigModal()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(SiginingPadModal.Id), Id);
+        parameters.Add(nameof(SiginingPadModal.EmployeeId), EmployeeId);
+        parameters.Add(nameof(SiginingPadModal.SaveDataUrl), SaveDataUrl);
+        
+        var modalRef = Modal?.Show<SiginingPadModal>("Add Status", parameters);
+        var modalResult = await modalRef?.Result!;
+        
+        if(modalResult.Cancelled)
+            return;
+
+        var modalData = modalResult.Data as string;
+        src = modalData;
+        StateHasChanged();
+    }
+
 
 }
 

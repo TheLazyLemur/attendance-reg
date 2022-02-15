@@ -17,7 +17,7 @@ public class EmployeeEnvoy
         return await _supabaseEnvoy.Get<List<Employee>>(SupabaseResources.EmployeeTable, $"?select=*&office_id=eq.{int.Parse(await _appState.GetOfficeId())}");
     }
 
-    public async Task AddEmployee(Employee employeeEnvoy)
+    public async Task AddEmployee(Employee? employeeEnvoy)
     {
         employeeEnvoy.OfficeId = int.Parse(await _appState.GetOfficeId());
         await _supabaseEnvoy.Post(SupabaseResources.EmployeeTable, employeeEnvoy);

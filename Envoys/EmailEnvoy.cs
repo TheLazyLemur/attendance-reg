@@ -1,6 +1,4 @@
-using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace attendance_reg.Pages.Envoys;
 
@@ -59,7 +57,6 @@ public class EmailEnvoy
          }
       };
 
-
       var client = new HttpClient();
       var request = new HttpRequestMessage
       {
@@ -67,11 +64,8 @@ public class EmailEnvoy
          RequestUri = new Uri("https://holborn-za-attendance.netlify.app/.netlify/functions/email"),
          Content = new StringContent(JsonSerializer.Serialize(email))
       };
-      using (var response = await client.SendAsync(request))
-      {
-         response.EnsureSuccessStatusCode();
-         var body = await response.Content.ReadAsStringAsync();
-         Console.WriteLine(body);
-      }
+      
+      using var response = await client.SendAsync(request);
+      response.EnsureSuccessStatusCode();
    }
 }
