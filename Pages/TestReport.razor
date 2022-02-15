@@ -57,7 +57,11 @@ else
     {
         Meeting = await MeetingEnvoy.GetMeeting(MeetingId);
         StateHasChanged();
+        
+        
         FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
+        FinalReports = FinalReports.GroupBy(it => it.Employee.Id)
+            .Select(it => it.First()).ToList();
         StateHasChanged();
         await EmailEnvoy.Send("danrousseau@protonmail.com", Meeting.FirstOrDefault().Name, JsonSerializer.Serialize(FinalReports, new JsonSerializerOptions{WriteIndented = true}));
     }
