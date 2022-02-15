@@ -16,6 +16,11 @@ public class MeetingEnvoy
         return await _supabaseEnvoy.Get<List<Meeting>>(SupabaseResources.MeetingTable, $"?select=*&office_id=eq.{int.Parse(await _appState.GetOfficeId())}");
     }
     
+    public async Task DeleteMeeting(int meetingId)
+    {
+        await _supabaseEnvoy.Delete(SupabaseResources.MeetingTable, $"?id=eq.{meetingId}");
+    }
+    
     public async Task<List<Meeting>?> GetMeeting(string? id)
     {
         return await _supabaseEnvoy.Get<List<Meeting>>(SupabaseResources.MeetingTable, $"?id=eq.{id}&select=*&office_id=eq.{int.Parse(await _appState.GetOfficeId())}");

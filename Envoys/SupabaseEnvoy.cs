@@ -30,13 +30,48 @@ public class SupabaseEnvoy
                 { "Authorization", "Bearer " + token },
             },
         };
-        using var response = await client.SendAsync(request);
-        
-        response.EnsureSuccessStatusCode();
-        var body = await response.Content.ReadAsStringAsync();
-        var employees = JsonSerializer.Deserialize<T>(body);
 
-        return employees;
+        try
+        {
+            using var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var body = await response.Content.ReadAsStringAsync();
+            var employees = JsonSerializer.Deserialize<T>(body);
+            return employees;
+        }
+        catch (Exception e)
+        {
+            _toastService.ShowError($"failed to fetch {resource}.");
+        }
+
+        return default;
+   }
+   
+   public async Task Delete (string resource, string query)
+   {
+        var token = await _authenticationEnvoy.Login();
+        var client = new HttpClient();
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new Uri($"{SupabaseResources.SupabaseUrl}/{resource}{query}"),
+            Headers =
+            {
+                { "apikey", token },
+                { "Authorization", "Bearer " + token },
+            },
+        };
+
+        try
+        {
+            using var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            _toastService.ShowSuccess($"Deleted {resource} with query of {query}");
+        }
+        catch (Exception e)
+        {
+            _toastService.ShowError($"failed to delete {resource}.");
+        }
    }
    
    public async Task Post<T>(string resource, T payload)
@@ -77,5 +112,4 @@ public class SupabaseEnvoy
             _toastService.ShowError($"failed to create new {resource}.");
         }
    }
-   
 }

@@ -16,6 +16,7 @@
                         <td>@meeting.Name </td>
                         <td>@meeting.Speaker </td>
                         <td>@meeting.Topic </td>
+                        <td><button class="px-2 py-1 text-white bg-red-500 rounded" @onclick="@(async () => { await MeetingEnvoy.DeleteMeeting(meeting.Id.Value);})">X</button> </td>
                     </tr>
                 }
             }

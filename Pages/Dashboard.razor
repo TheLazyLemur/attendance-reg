@@ -1,6 +1,4 @@
 @page "/Dashboard"
-@using attendance_reg.Pages.Envoys
-
 
 <div class="h-full w-full flex">
 <div class="m-auto space-y-3">
@@ -16,7 +14,8 @@
                         <div>
                             <a class="hover:text-blue-500" href="meeting/@meeting.Id">@meeting.Name</a>
                         </div>
-                        <button class="text-xs text-gray-400 hover:text-gray-600" @onclick="@(() => {NavigationManager.NavigateTo($"report/{meeting.Id}");})">View Report</button>
+                        <button class="text-xs text-gray-400 hover:text-gray-600" @onclick="@(() => { NavigationManager.NavigateTo($"report/{meeting.Id}"); })">View Report</button>
+                        <button class="px-2 py-1 text-white bg-red-500 rounded" @onclick="@(async () => { MeetingEnvoy.DeleteMeeting(meeting.Id.Value);})">X</button>
                     </div>
                 }
             }
@@ -36,40 +35,3 @@
     </div>
 </div>
 </div>
-
-@code {
-
-    [CascadingParameter] public IModalService? Modal { get; set; }
-    
-    [Inject]
-    public MeetingEnvoy? MeetingEnvoy { get; set; }
-
-    [Inject]
-    public NavigationManager NavigationManager { get; set; }
-
-    private List<Meeting>? Meetings { get; set; }
-    private bool _displayModal = false;
-    private readonly Meeting? _meeting = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        Meetings = await MeetingEnvoy?.GetMeetings()!;
-    }
-    
-    async Task ShowAddMeeting()
-    {
-        var parameters = new ModalParameters();
-        parameters.Add(nameof(MeetingAdminModal.MeetingEnvoy), MeetingEnvoy);
-        parameters.Add(nameof(MeetingAdminModal.Meeting), _meeting);
-
-        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters);
-        var modalResult = await modalRef?.Result!;
-        
-        if(modalResult.Cancelled)
-            return;
-        
-        Meetings = await MeetingEnvoy?.GetMeetings()!;
-        StateHasChanged();
-    }
-
-}

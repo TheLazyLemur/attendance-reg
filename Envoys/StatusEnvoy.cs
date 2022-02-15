@@ -11,8 +11,12 @@ public class StatusEnvoy
     
     public async Task<List<Status>?> GetStatuses()
     {
-        
         return (await _supabaseEnvoy.Get<List<Status?>>(SupabaseResources.Status, "?select=*"))!;
+    }
+    
+    public async Task DeleteStatus(string status)
+    {
+        await _supabaseEnvoy.Delete(SupabaseResources.Status, $"?name=eq.{status}");
     }
 
     public async Task AddStatus(Status employeeEnvoy)

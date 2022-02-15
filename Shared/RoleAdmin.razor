@@ -8,10 +8,11 @@
                 <tr class="text-left">
                     <th>Name</th>
                 </tr>
-                @foreach (var employee in _statuses)
+                @foreach (var status in _statuses)
                 {
                     <tr>
-                        <td>@employee.Name </td>
+                        <td> @status.Name </td>
+                        <td><button class="px-2 py-1 text-white bg-red-500 rounded" @onclick="@(() => StatusEnvoy.DeleteStatus(status.Name))">X</button></td>
                     </tr>
                 }
             }
