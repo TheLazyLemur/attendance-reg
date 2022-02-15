@@ -1,16 +1,19 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Blazored.Toast.Services;
 
 namespace attendance_reg.Pages.Envoys;
 
 public class SupabaseEnvoy
 {
     private readonly AuthenticationEnvoy _authenticationEnvoy;
+    private readonly IToastService _toastService;
 
-    public SupabaseEnvoy(AuthenticationEnvoy authenticationEnvoy)
+    public SupabaseEnvoy(AuthenticationEnvoy authenticationEnvoy, IToastService toastService)
     {
         _authenticationEnvoy = authenticationEnvoy;
+        _toastService = toastService;
     }
 
    public async Task<T?> Get<T>(string resource, string query)
@@ -65,11 +68,13 @@ public class SupabaseEnvoy
         {
             Console.WriteLine("Uploading to Supabase");
             response.EnsureSuccessStatusCode();
+            _toastService.ShowSuccess($"Created new {resource}");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             Console.WriteLine(jsonPayload);
+            _toastService.ShowError($"failed to create new {resource}.");
         }
    }
    
