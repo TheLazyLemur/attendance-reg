@@ -1,8 +1,7 @@
      <div>
-          <button class="" @onclick="@(Init)">Init</button>
           <canvas height="200" width="300" class="border" id="@Id">
           </canvas>
-          <button @onclick="@(SaveSignature)">Save</button>
+          <button class=" mt-5 w-24 border border-blue-500 rounded-lg bg-blue-500 text-white" @onclick="@(SaveSignature)">Save</button>
      </div>
 
 @code {
@@ -20,10 +19,11 @@
      
      [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
      
-     public async Task Init()
-     {
-          await JsRuntime.InvokeVoidAsync("loadSig", Id);
-     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+         if (!firstRender)
+              await JsRuntime.InvokeVoidAsync("loadSig", Id);
+    }
      
      public async Task SaveSignature()
      {
