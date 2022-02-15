@@ -2,35 +2,39 @@
 @using attendance_reg.Pages.Envoys
 
 
-<h1 class="mt-5 text-2xl">Meetings</h1>
-<div class="mt-5 space-y-3">
-    @if (Meetings is not null)
-    {
-        if (Meetings.Any())
+<div class="h-full w-full flex">
+<div class="m-auto space-y-3">
+    <h1 class="mt-5 text-2xl">Meetings</h1>
+    <div class="mt-5 space-y-3">
+        @if (Meetings is not null)
         {
-            @foreach (var meeting in Meetings)
+            if (Meetings.Any())
             {
-                <div class="flex space-x-3">
-                    <div>
-                        <a class="hover:text-blue-500" href="meeting/@meeting.Id">@meeting.Name</a>
+                @foreach (var meeting in Meetings)
+                {
+                    <div class="flex space-x-3">
+                        <div>
+                            <a class="hover:text-blue-500" href="meeting/@meeting.Id">@meeting.Name</a>
+                        </div>
+                        <button class="text-xs text-gray-400 hover:text-gray-600" @onclick="@(() => {NavigationManager.NavigateTo($"report/{meeting.Id}");})">View Report</button>
                     </div>
-                    <button class="text-xs text-gray-400 hover:text-gray-600" @onclick="@(() => {NavigationManager.NavigateTo($"report/{meeting.Id}");})">View Report</button>
-                </div>
+                }
+            }
+            else
+            {
+                <div>Nothing Found</div>
             }
         }
         else
         {
-            <div>Nothing Found</div>
+            <div>Loading...</div>
         }
-    }
-    else
-    {
-        <div>Loading...</div>
-    }
+    </div>
+    <div class="my-5 flex space-x-5">
+        <button @onclick="@(async () => {await ShowAddMeeting();})" class="bg-blue-500 text-white py-2 px-3 rounded-lg">New Meeting</button>
+        <button @onclick="@(() => { NavigationManager.NavigateTo("admin"); })" class="bg-blue-500 text-white py-2 px-3 rounded-lg">Admin</button>
+    </div>
 </div>
-<div class="my-5 flex space-x-5">
-    <button @onclick="@(async () => {await ShowAddMeeting();})" class="bg-blue-500 text-white py-2 px-3 rounded-lg">New Meeting</button>
-    <button @onclick="@(() => { NavigationManager.NavigateTo("admin"); })" class="bg-blue-500 text-white py-2 px-3 rounded-lg">Admin</button>
 </div>
 
 @code {

@@ -1,25 +1,29 @@
 @page "/"
 
-<h1 class="mt-5 text-2xl">Pick An Office</h1>
-<div class="mt-5 space-y-3">
-    @if (Offices is not null)
-    {
-        if (Offices.Any())
-        {
-            @foreach (var office in Offices)
+<div class="h-full w-full flex">
+    <div class="m-auto space-y-3">
+        <h1 class="text-2xl">Pick An Office</h1>
+        <div class="space-y-3">
+            @if (Offices is not null)
             {
-                <div>
-                    <button class="hover:text-blue-500" @onclick="@(() => {AppState.SaveOfficeId(office.Id.ToString()) ;NavigationManager.NavigateTo("dashboard");})">@office.Name Office</button>
-                </div>
+                if (Offices.Any())
+                {
+                    @foreach (var office in Offices)
+                    {
+                        <div>
+                            <button class="hover:text-blue-500" @onclick="@(() => {AppState.SaveOfficeId(office.Id.ToString());NavigationManager.NavigateTo("dashboard");})">@office.Name Office</button>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div>Nothing found</div>
+                }
             }
-        }
-        else
-        {
-            <div>Nothing found</div>
-        }
-    }
-    else
-    {
-            <div>Loading...</div>
-    }
+            else
+            {
+                <div>Loading...</div>
+            }
+        </div>
+    </div>
 </div>
