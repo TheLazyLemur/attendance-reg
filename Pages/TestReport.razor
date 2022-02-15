@@ -38,6 +38,7 @@ else
                </div>
            </div>
        } 
+        <button @onclick="@(async () => { await EmailReport();})" class="mt-5 w-24 border border-blue-500 rounded-lg bg-blue-500 text-white">Email Report</button>
     }
 }
 else
@@ -50,6 +51,9 @@ else
     [Parameter]
     public string? MeetingId { get; set; }
     
+    [CascadingParameter]
+    public IModalService? Modal { get; set; }
+    
     private List<FinalReport>? FinalReports { get; set; }
     private List<Meeting>? Meeting { get; set; }
 
@@ -57,13 +61,25 @@ else
     {
         Meeting = await MeetingEnvoy.GetMeeting(MeetingId);
         StateHasChanged();
-        
-        
         FinalReports = await MeetingReportService.GenerateReport(int.Parse(MeetingId));
-        FinalReports = FinalReports.GroupBy(it => it.Employee.Id)
-            .Select(it => it.First()).ToList();
+        FinalReports = FinalReports.DistinctBy(it => it.Employee.Id).ToList();
         StateHasChanged();
-        await EmailEnvoy.Send("danrousseau@protonmail.com", Meeting.FirstOrDefault().Name, JsonSerializer.Serialize(FinalReports, new JsonSerializerOptions{WriteIndented = true}));
+    }
+
+    private async Task EmailReport()
+    {
+        var parameters = new ModalParameters();
+        
+        var modalRef = Modal?.Show<EmailModal>("Enter Email", parameters);
+        var modalResult = await modalRef?.Result!;
+        
+        if(modalResult.Cancelled)
+            return;
+
+        var emailAddress = modalResult.Data as string;
+        Console.WriteLine(emailAddress);
+
+        await EmailEnvoy.Send(emailAddress, Meeting.FirstOrDefault().Name, JsonSerializer.Serialize(FinalReports, new JsonSerializerOptions {WriteIndented = true}));
     }
 
 }
