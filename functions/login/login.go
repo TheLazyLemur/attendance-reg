@@ -1,12 +1,21 @@
 package main
 
 import (
+	"crypto/sha1"
+	"encoding/base64"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"net/http"
 	"os"
 )
+
+func GenerateSha256(bv []byte) string {
+	hasher := sha1.New()
+	hasher.Write(bv)
+	sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	return sha
+}
 
 func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 
@@ -25,7 +34,9 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 		}, nil
 	}
 
-	if credentials != "daniel" {
+	expected_hash := os.Getenv("password_hash")
+
+	if GenerateSha256([]byte(credentials)) != expected_hash {
 		return &events.APIGatewayProxyResponse{
 			StatusCode:        401,
 			Headers:           map[string]string{"Content-Type": "text/plain"},
