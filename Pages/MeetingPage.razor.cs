@@ -85,10 +85,11 @@ public partial class MeetingPage
     private Task SendToServer()
     {
         if (MeetingEnvoy is null || SignatureEnvoy is null) return Task.CompletedTask;
-        
+
         _attendance.Values.ToList().ForEach(it =>
         {
-            it.Status = _statusMap[it.EmployeeId];
+            var couldGet = _statusMap.TryGetValue(it.EmployeeId, out var s);
+            it.Status = couldGet ? s : "Office";
         });
 
         Task.Run(async () =>

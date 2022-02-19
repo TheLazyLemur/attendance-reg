@@ -37,7 +37,7 @@ public class MeetingReportService
         var signatures = await _signatureEnvoy.GetSignature();
 
         var recs = attendanceRecords.Where(it => it.MeetingId == meetingId).ToList();
-        var sigs = recs.Select(it => signatures.FirstOrDefault(s => s.EmployeeId == it.EmployeeId)).ToList();
+        var sigs = recs.Select(it => signatures.FirstOrDefault(s => s.EmployeeId == it.EmployeeId && s.MeetingId == it.MeetingId)).ToList();
         var emps = recs.Select(it => employees.FirstOrDefault(e => e.Id == it.EmployeeId)).ToList();
         
         var finalReport = recs.Select(it => new FinalReport(emps.FirstOrDefault(e => e.Id == it.EmployeeId), sigs.FirstOrDefault(s => s.EmployeeId == it.EmployeeId), it)).ToList();
