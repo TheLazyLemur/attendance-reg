@@ -14,10 +14,9 @@ public partial class Dashboard
     public MeetingEnvoy? MeetingEnvoy { get; set; }
 
     [Inject]
-    public NavigationManager NavigationManager { get; set; }
+    public NavigationManager? NavigationManager { get; set; }
 
     private List<Meeting>? Meetings { get; set; }
-    private bool _displayModal = false;
     private readonly Meeting? _meeting = new();
 
     protected override async Task OnInitializedAsync()
@@ -25,19 +24,25 @@ public partial class Dashboard
         Meetings = await MeetingEnvoy?.GetMeetings()!;
     }
     
-    async Task ShowAddMeeting()
+    private async Task ShowAddMeeting()
     {
         var parameters = new ModalParameters();
         parameters.Add(nameof(MeetingAdminModal.MeetingEnvoy), MeetingEnvoy);
         parameters.Add(nameof(MeetingAdminModal.Meeting), _meeting);
 
         var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters);
-        var modalResult = await modalRef?.Result!;
-        
-        if(modalResult.Cancelled)
-            return;
+        _ = await modalRef?.Result!;
         
         Meetings = await MeetingEnvoy?.GetMeetings()!;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task DeleteMeeting(int id)
+    {
+        Meetings!.RemoveAll(m => m.Id == id);
+        await MeetingEnvoy?.DeleteMeeting(id)!; 
+        
+        Meetings = await MeetingEnvoy?.GetMeetings()!;
+        await InvokeAsync(StateHasChanged);
     }
 }
