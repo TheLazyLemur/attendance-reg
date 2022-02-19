@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using Microsoft.JSInterop;
 
@@ -22,8 +21,7 @@ public class AuthenticationEnvoy
 
       var httpClient = new HttpClient();
       
-      httpClient.DefaultRequestHeaders.Add("Auth", $"{password}");
-      var result = await httpClient.GetAsync($"https://holborn-za-attendance.netlify.app/.netlify/functions/login");
+      var result = await httpClient.GetAsync($"https://holborn-za-attendance.netlify.app/.netlify/functions/login?credentials={password}");
 
       if ((int)result.StatusCode == 401)
       {
