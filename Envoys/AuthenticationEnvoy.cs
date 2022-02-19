@@ -14,18 +14,24 @@ public class AuthenticationEnvoy
 
    public async Task<string> Login()
    {
-      var t = await JsRuntime.InvokeAsync<string>("localStorage.getItem", "token");
+      var t = await JsRuntime.InvokeAsync<string>("sessionStorage.getItem", "token");
 
       if (!string.IsNullOrEmpty(t)) return t;
+      var password = await JsRuntime.InvokeAsync<string>("prompt", "Please enter password");
 
       var httpClient = new HttpClient();
 
-      var result = await httpClient.GetAsync("https://holborn-za-attendance.netlify.app/.netlify/functions/login?credentials=daniel");
+      var result = await httpClient.GetAsync($"https://holborn-za-attendance.netlify.app/.netlify/functions/login?credentials={password}");
+
+      if ((int)result.StatusCode == 401)
+      {
+         return await Login();
+      }
 
       var response = await result.Content.ReadAsStringAsync();
       var token = JsonSerializer.Deserialize<TokenResponse>(response);
 
-      await JsRuntime.InvokeAsync<string>("localStorage.setItem", "token", token.Token);
+      await JsRuntime.InvokeAsync<string>("sessionStorage.setItem", "token", token.Token);
       return token.Token;
 
    }
