@@ -19,24 +19,11 @@ func GenerateSha256(bv []byte) string {
 
 func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 
-	params := request.QueryStringParameters
-
-	credentials := ""
-	if params["credentials"] != "" {
-		credentials = params["credentials"]
-	} else {
-		return &events.APIGatewayProxyResponse{
-			StatusCode:        401,
-			Headers:           map[string]string{"Content-Type": "text/plain"},
-			MultiValueHeaders: http.Header{"Set-Cookie": {"Ding", "Ping"}},
-			Body:              "Unauthorized",
-			IsBase64Encoded:   false,
-		}, nil
-	}
-
+	received_creds := request.Headers["Auth"]
 	expected_hash := os.Getenv("password_hash")
+	hash_of_received_creds := GenerateSha256([]byte(received_creds))
 
-	if GenerateSha256([]byte(credentials)) != expected_hash {
+	if hash_of_received_creds != expected_hash {
 		return &events.APIGatewayProxyResponse{
 			StatusCode:        401,
 			Headers:           map[string]string{"Content-Type": "text/plain"},
@@ -47,7 +34,6 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 	}
 
 	token := os.Getenv("supabase_token")
-
 	payload := fmt.Sprintf("{\"token\":\"%s\"}", token)
 
 	return &events.APIGatewayProxyResponse{
