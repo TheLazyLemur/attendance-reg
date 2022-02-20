@@ -24,7 +24,10 @@ public partial class SiginingPadModal
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
          if (!firstRender)
+         {
+              await JsRuntime.InvokeVoidAsync("resizeSig", Id);
               await JsRuntime.InvokeVoidAsync("loadSig", Id);
+         }
     }
      
      public async Task SaveSignature()
