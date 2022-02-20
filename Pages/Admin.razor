@@ -1,7 +1,23 @@
 @page "/Admin"
 
-<div class="mt-10 h-full overflow-auto">
-    <EmployeeAdmin/>
-    <RoleAdmin/>
-    <MeetingAdmin/>
+
+<div class="flex space-x-5 mt-5">
+    <button class="@(_pageStatus == PageStatus.Employee ? "bg-blue-500" : "bg-gray-500") text-white px-2 py-1 rounded-md" @onclick="@(() => { _pageStatus = PageStatus.Employee; StateHasChanged();})">Employees</button>
+    <button class="@(_pageStatus == PageStatus.Meeting ? "bg-blue-500" : "bg-gray-500") text-white px-2 py-1 rounded-md" @onclick="@(() => { _pageStatus = PageStatus.Meeting; StateHasChanged();})">Meetings</button>
+    <button class="@(_pageStatus == PageStatus.Status ? "bg-blue-500" : "bg-gray-500") text-white px-2 py-1 rounded-md" @onclick="@(() => { _pageStatus = PageStatus.Status; StateHasChanged();})">Status</button>
+</div>
+
+<div class="h-full overflow-auto">
+    @if (_pageStatus == PageStatus.Employee)
+    {
+        <EmployeeAdmin/>
+    }
+    @if (_pageStatus == PageStatus.Status)
+    {
+        <RoleAdmin/>
+    }
+    @if (_pageStatus == PageStatus.Meeting)
+    {
+        <MeetingAdmin/>
+    }
 </div>

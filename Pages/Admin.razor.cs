@@ -10,6 +10,15 @@ public partial class Admin
     private Employee? _employee = new();
 
     private List<Employee>? _employees;
+    
+    private enum PageStatus
+    {
+        Employee,
+        Status,
+        Meeting
+    }
+    
+    private PageStatus _pageStatus = PageStatus.Employee;
 
     protected override async Task OnInitializedAsync()
     {
