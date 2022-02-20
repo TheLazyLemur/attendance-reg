@@ -9,4 +9,5 @@ public class Meeting
     [JsonPropertyName("topic")] public string? Topic { get; set; }
     [JsonPropertyName("speaker")] public string? Speaker { get; set; }
     [JsonPropertyName("office_id")] public int OfficeId { get; set; }
+    [JsonPropertyName("meeting_date")] public DateTime MeetingDate { get; set; }
 }

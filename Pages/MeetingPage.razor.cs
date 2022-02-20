@@ -13,6 +13,7 @@ public partial class MeetingPage
 
     private string? _speaker;
     private string? _topic;
+    private string? _date;
 
     private List<Employee>? _employees = new();
     private List<Status>? _statuses = new();
@@ -43,6 +44,7 @@ public partial class MeetingPage
             var meeting = await MeetingEnvoy.GetMeeting(Id);
             _speaker = meeting?[0].Speaker;
             _topic = meeting?[0].Topic;
+            _date = meeting?[0].MeetingDate.ToString();
             await InvokeAsync(StateHasChanged);
         });
          

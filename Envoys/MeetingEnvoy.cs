@@ -26,7 +26,7 @@ public class MeetingEnvoy
         return await _supabaseEnvoy.Get<List<Meeting>>(SupabaseResources.MeetingTable, $"?id=eq.{id}&select=*&office_id=eq.{int.Parse(await _appState.GetOfficeId())}");
     }
 
-    public async Task AddStatus(Meeting? meeting)
+    public async Task AddMeeting(Meeting? meeting)
     {
         meeting.OfficeId = int.Parse(await _appState.GetOfficeId());
         await _supabaseEnvoy.Post(SupabaseResources.MeetingTable, meeting);
