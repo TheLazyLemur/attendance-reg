@@ -64,20 +64,20 @@ public partial class TestReport
         sb.Append("Name");
         sb.Append("</th>"); 
         sb.Append("<th style=\"border: 1px solid black;\">"); 
-        sb.Append("Surname");
+        sb.Append("Status");
         sb.Append("</th>"); 
         sb.Append("<th style=\"border: 1px solid black;\">"); 
-        sb.Append("Image");
+        sb.Append("Signature");
         sb.Append("</th>"); 
         sb.AppendLine("</tr>");
         finalReports.ForEach(it =>
         {
             sb.AppendLine("<tr style=\"border: 1px solid black;\">");
             sb.AppendLine("<td style=\"border: 1px solid black;\">");
-            sb.AppendLine(it.Employee.Name);
+            sb.AppendLine(it.Employee.Name + " " + it.Employee.Surname);
             sb.AppendLine("</td>");
             sb.AppendLine("<td style=\"border: 1px solid black;\">");
-            sb.AppendLine(it.Employee.Surname);
+            sb.AppendLine(it.Attendance.Status);
             sb.AppendLine("</td>");
             sb.AppendLine("<td style=\"border: 1px solid black;\">");
             sb.AppendLine("<img src=\"" + it.Signature.DataUrl + "\" style=\"height:50px; width:50px; \" alt=\"\">");

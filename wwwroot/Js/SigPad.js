@@ -1,16 +1,8 @@
-window.sigCanvas = undefined
-
 window.allSignaturePads = {}
 
 window.loadSig = (canvasId) => {
     resizeSig(canvasId);
-    let newSigCanvas = document.getElementById(canvasId);
-    window.allSignaturePads[canvasId] = new SignaturePad(newSigCanvas)
-}
-
-window.saveSigDataPoints = (canvasId) => {
-    let sig = window.allSignaturePads[canvasId].toDataURL();
-    return JSON.stringify(sig.toData());
+    window.allSignaturePads[canvasId] = new SignaturePad(document.getElementById(canvasId))
 }
 
 window.saveSig = (canvasId) => {
