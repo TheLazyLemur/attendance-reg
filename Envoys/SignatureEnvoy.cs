@@ -18,4 +18,9 @@ public class SignatureEnvoy
     {
        return await _supabaseEnvoy.Get<List<MeetingSignature>>(SupabaseResources.SignatureTable, "?select=*");
     }
+    
+    public async Task<List<MeetingSignature>?> GetSignatureImage(string filter)
+    {
+       return await _supabaseEnvoy.Get<List<MeetingSignature>>(SupabaseResources.SignatureTable, $"?select=data_url&{filter}");
+    }
 }

@@ -13,18 +13,10 @@
                     @employee.Name @employee.Surname 
                 </div>
                 <div class="my-auto">
-                    <SigningPad SaveDataUrl="@(Save)" EmployeeId="@(employee.Id.Value)" Id="@employee.Name"/>
+                    <SigningPad SaveDataUrl="@(Save)" MeetingId="@Id" EmployeeId="@(employee.Id.Value)" Id="@employee.Name"/>
                 </div>
                 <div>
-                    <select @onchange="@(e => { UpdateStatus(employee.Id, e.Value.ToString()); })" class="h-full bg-white my-auto" name="status-@employee.Name-@employee.Surname" id="status-@employee.Name-@employee.Surname">
-                        @if (_statuses is not null)
-                        {
-                            @foreach (var status in _statuses)
-                            {
-                                <option value="@status.Name">@status.Name</option>
-                            }
-                        }
-                    </select>
+                    <LoadSelect Id="@employee.Id.Value" _statuses="_statuses" EmployeeId="employee.Id.Value" MeetingId="@(int.Parse(Id))" Callback="UpdateStatus"></LoadSelect>
                 </div>
             </div>
         }

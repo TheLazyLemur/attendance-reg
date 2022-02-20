@@ -30,14 +30,12 @@ public partial class MeetingPage
         {
             _employees = await EmployeeEnvoy.GetEmployees();
             await InvokeAsync(StateHasChanged);
-            Console.WriteLine("Employees loaded");
         });
         
         Task.Run(async () =>
         {
             _statuses = await StatusEnvoy.GetStatuses();
             await InvokeAsync(StateHasChanged);
-            Console.WriteLine("Statuses loaded");
         });
         
         Task.Run(async () =>
@@ -46,12 +44,36 @@ public partial class MeetingPage
             _speaker = meeting?[0].Speaker;
             _topic = meeting?[0].Topic;
             await InvokeAsync(StateHasChanged);
-            Console.WriteLine("Meeting loaded");
+        });
+         
+        LoadStatusMap();
+        StateHasChanged();
+    }
+    
+    private async void LoadStatusMap()
+    {
+        var x = await MeetingEnvoy.GetAttendanceRegister();
+        x.Where(it => it.MeetingId == int.Parse(Id)).ToList().ForEach(it =>
+        {
+            var couldAdd = _statusMap.TryAdd(it.EmployeeId, it.Status);
+            if (!couldAdd)
+                _statusMap[it.EmployeeId] = it.Status;
+            Console.WriteLine(it.Status);
         });
     }
 
     private void UpdateStatus(int? employeeId, string? status)
     {
+        if (status is null || employeeId is null) return;
+        var couldAdd = _statusMap.TryAdd(employeeId.Value, status); 
+        if(!couldAdd)
+            _statusMap[employeeId.Value] = status;
+    }
+    
+    private void UpdateStatus(Tuple<int?, string?> tuple)
+    {
+        var (employeeId, status) = tuple;
+        
         if (status is null || employeeId is null) return;
         var couldAdd = _statusMap.TryAdd(employeeId.Value, status); 
         if(!couldAdd)
@@ -96,6 +118,7 @@ public partial class MeetingPage
         {
             await MeetingEnvoy.SendAttendanceRegister(_attendance.Values.ToList());
         });
+        
         Task.Run(async () =>
         {
             await SignatureEnvoy.AddSignature(_signatures.Values.ToList());

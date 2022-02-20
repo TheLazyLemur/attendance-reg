@@ -37,6 +37,11 @@ public class MeetingEnvoy
         return await _supabaseEnvoy.Get<List<AttendanceRecord>>(SupabaseResources.AttendanceTable, "?select=*");
     }
     
+    public async Task<List<AttendanceRecord>?> GetAttendanceRegister(string filter)
+    {
+        return await _supabaseEnvoy.Get<List<AttendanceRecord>>(SupabaseResources.AttendanceTable, $"?select=*&{filter}");
+    }
+    
     public async Task SendAttendanceRegister(List<AttendanceRecord> attendanceRecords)
     {
         attendanceRecords.ForEach(async it =>

@@ -1,3 +1,4 @@
+using attendance_reg.Pages.Envoys;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
@@ -14,14 +15,29 @@ public partial class SigningPad
 
     [Parameter]
     public string Id { get; set; }
-
+    
+    [Parameter]
+    public string MeetingId { get; set; }
+    
     [Parameter]
     public int EmployeeId { get; set; }
-
+    
     [Parameter]
     public EventCallback<Dictionary<string, string>> SaveDataUrl { get; set; }
+    
+    [Inject]
+    private SignatureEnvoy SignatureEnvoy { get; set; }
 
     private string src { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var sigs = await SignatureEnvoy.GetSignatureImage($"" +
+                                                          $"meeting_id=eq.{MeetingId}" +
+                                                          $"&employee_id=eq.{EmployeeId}");
+        var sig = sigs.FirstOrDefault();
+        src = sig != null ? sig.DataUrl : string.Empty;
+    }
 
     private async Task ShowSigModal()
     {
