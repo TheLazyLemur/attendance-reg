@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 
 namespace attendance_reg.Shared;
 
-public partial class SiginingPadModal
+public partial class SiginingPadModal : IDisposable
 {
      [Inject]
      private IJSRuntime JsRuntime { get; set; }
@@ -23,25 +23,35 @@ public partial class SiginingPadModal
      
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-         if (!firstRender)
+         if (firstRender)
          {
-              await JsRuntime.InvokeVoidAsync("resizeSig", Id);
-              await JsRuntime.InvokeVoidAsync("loadSig", Id);
+              try
+              {
+                   await JsRuntime.InvokeVoidAsync("loadSig", Id);
+              }
+              catch (Exception e)
+              {
+                   Console.WriteLine("Error: " + e.Message);
+              }
          }
     }
-     
-     public async Task SaveSignature()
-     {
-          var result = await JsRuntime.InvokeAsync<string>("saveSig");
-          
-          var dict = new Dictionary<string, string>
-          {
-               {"employeeId", EmployeeId.ToString()},
-               {"dataUrl", result}
-          };
 
-          await SaveDataUrl.InvokeAsync(dict);
-          await ModalInstance.CloseAsync(ModalResult.Ok(result));
+    private async Task SaveSignature()
+    {
+         var result = await JsRuntime.InvokeAsync<string>("saveSig", Id);
 
-     }
+         var dict = new Dictionary<string, string>
+         {
+              {"employeeId", EmployeeId.ToString()},
+              {"dataUrl", result}
+         };
+
+         await SaveDataUrl.InvokeAsync(dict);
+         await ModalInstance.CloseAsync(ModalResult.Ok(result));
+    }
+
+    public async void Dispose()
+    {
+         await JsRuntime.InvokeVoidAsync("unbindSig", Id);
+    }
 }
