@@ -46,7 +46,7 @@ public partial class SigningPad
         parameters.Add(nameof(SiginingPadModal.EmployeeId), EmployeeId);
         parameters.Add(nameof(SiginingPadModal.SaveDataUrl), SaveDataUrl);
         
-        var modalRef = Modal?.Show<SiginingPadModal>("Add Status", parameters);
+        var modalRef = Modal?.Show<SiginingPadModal>("Add Status", parameters, new ModalOptions {HideHeader = true});
         var modalResult = await modalRef?.Result!;
         
         if(modalResult.Cancelled)

@@ -33,7 +33,7 @@ public partial class RoleAdmin
         parameters.Add(nameof(RoleAdminModal.Status), _status);
         parameters.Add(nameof(RoleAdminModal.StatusEnvoy), StatusEnvoy);
 
-        var modalRef = Modal?.Show<RoleAdminModal>("Add Status", parameters);
+        var modalRef = Modal?.Show<RoleAdminModal>("Add Status", parameters, new ModalOptions {HideHeader = true});
         var modalResult = await modalRef?.Result!;
         
         if(modalResult.Cancelled)

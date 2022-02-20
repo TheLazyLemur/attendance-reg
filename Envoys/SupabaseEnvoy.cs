@@ -9,6 +9,7 @@ public class SupabaseEnvoy
 {
     private readonly AuthenticationEnvoy _authenticationEnvoy;
     private readonly IToastService _toastService;
+    private static Dictionary<string, string> _cachedTokens = new();
 
     public SupabaseEnvoy(AuthenticationEnvoy authenticationEnvoy, IToastService toastService)
     {
@@ -33,11 +34,23 @@ public class SupabaseEnvoy
 
         try
         {
-            using var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            var body = await response.Content.ReadAsStringAsync();
-            var employees = JsonSerializer.Deserialize<T>(body);
-            return employees;
+            var b = _cachedTokens.TryGetValue(resource+query, out var cachedToken);
+            if (b && cachedToken != null)
+            {
+                var employees = JsonSerializer.Deserialize<T>(cachedToken);
+                Console.WriteLine("Using Cache");
+                return employees;
+            }
+            else
+            {
+                using var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                var body = await response.Content.ReadAsStringAsync();
+                var employees = JsonSerializer.Deserialize<T>(body);
+                _cachedTokens.TryAdd(resource+query, body);
+                Console.WriteLine("Not Using Cache");
+                return employees;
+            }
         }
         catch (Exception e)
         {
@@ -67,6 +80,7 @@ public class SupabaseEnvoy
             using var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             _toastService.ShowSuccess($"Deleted {resource} with query of {query}");
+            _cachedTokens = new Dictionary<string, string?>();
         }
         catch (Exception e)
         {
@@ -104,6 +118,7 @@ public class SupabaseEnvoy
             Console.WriteLine("Uploading to Supabase");
             response.EnsureSuccessStatusCode();
             _toastService.ShowSuccess($"Created new {resource}");
+            _cachedTokens = new Dictionary<string, string?>();
         }
         catch (Exception e)
         {

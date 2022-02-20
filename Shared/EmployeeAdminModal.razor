@@ -3,7 +3,8 @@
 <EditForm Model="@Employee" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
-    <div class="flex flex-col space-y-5">
+    <h1 class="text-2xl font-semibold">Add Employee</h1>
+    <div class="flex flex-col space-y-5 my-5">
         <div class="flex space-x-5">
             <label for="name">Name</label>
             <InputText class="border rounded-md" id="name" @bind-Value="Employee.Name"/>

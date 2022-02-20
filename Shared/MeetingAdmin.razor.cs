@@ -27,7 +27,7 @@ public partial class MeetingAdmin
         parameters.Add(nameof(MeetingAdminModal.MeetingEnvoy), MeetingEnvoy);
         parameters.Add(nameof(MeetingAdminModal.Meeting), _meeting);
 
-        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters);
+        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters, new ModalOptions {HideHeader = true});
         var modalResult = await modalRef?.Result!;
         
         if(modalResult.Cancelled)

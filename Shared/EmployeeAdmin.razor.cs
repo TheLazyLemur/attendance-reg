@@ -26,7 +26,7 @@ public partial class EmployeeAdmin
         parameters.Add(nameof(EmployeeAdminModal.Employee), _employee);
         parameters.Add(nameof(EmployeeAdminModal.EmployeeEnvoy), EmployeeEnvoy);
 
-        var modalRef = Modal?.Show<EmployeeAdminModal>("Add Employee", parameters);
+        var modalRef = Modal?.Show<EmployeeAdminModal>("Add Employee", parameters, new ModalOptions {HideHeader = true});
         var modalResult = await modalRef?.Result!;
         
         if(modalResult.Cancelled)

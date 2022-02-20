@@ -30,7 +30,7 @@ public partial class Dashboard
         parameters.Add(nameof(MeetingAdminModal.MeetingEnvoy), MeetingEnvoy);
         parameters.Add(nameof(MeetingAdminModal.Meeting), _meeting);
 
-        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters);
+        var modalRef = Modal?.Show<MeetingAdminModal>("Add Meeting", parameters, new ModalOptions {HideHeader = true});
         _ = await modalRef?.Result!;
         
         Meetings = await MeetingEnvoy?.GetMeetings()!;
