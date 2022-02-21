@@ -87,6 +87,45 @@ public class SupabaseEnvoy
             _toastService.ShowError($"failed to delete {resource}.");
         }
    }
+   public async Task Put<T>(string resource, T payload, string query)
+   {
+        var token = await _authenticationEnvoy.Login();
+        var jsonPayload = JsonSerializer.Serialize(payload, new JsonSerializerOptions {DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull});
+        
+        var client = new HttpClient();
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri($"{SupabaseResources.SupabaseUrl}/{resource}?{query}"),
+            Headers =
+            {
+                { "apikey", token },
+                { "Authorization", "Bearer " + token },
+                { "Prefer", "return=representation" },
+            },
+            Content = new StringContent(jsonPayload)
+            {
+                Headers =
+                {
+                    ContentType = new MediaTypeHeaderValue("application/json")
+                }
+            }
+        };
+        using var response = await client.SendAsync(request);
+        try
+        {
+            Console.WriteLine("Uploading to Supabase");
+            response.EnsureSuccessStatusCode();
+            _toastService.ShowSuccess($"Created new {resource}");
+            _cachedTokens = new Dictionary<string, string?>();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Console.WriteLine(jsonPayload);
+            _toastService.ShowError($"failed to create new {resource}.");
+        }
+   }
    
    public async Task Post<T>(string resource, T payload)
    {

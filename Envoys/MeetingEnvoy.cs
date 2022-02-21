@@ -32,6 +32,12 @@ public class MeetingEnvoy
         await _supabaseEnvoy.Post(SupabaseResources.MeetingTable, meeting);
     }
     
+    public async Task UpdateMeeting(Meeting? meeting)
+    {
+        meeting.OfficeId = int.Parse(await _appState.GetOfficeId());
+        await _supabaseEnvoy.Put(SupabaseResources.MeetingTable, meeting, $"id=eq.{meeting.Id}");
+    }
+    
     public async Task<List<AttendanceRecord>?> GetAttendanceRegister()
     {
         return await _supabaseEnvoy.Get<List<AttendanceRecord>>(SupabaseResources.AttendanceTable, "?select=*");

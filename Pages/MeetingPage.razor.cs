@@ -1,5 +1,8 @@
 using System.Globalization;
 using attendance_reg.Pages.Envoys;
+using attendance_reg.Shared;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace attendance_reg.Pages;
@@ -11,8 +14,10 @@ public partial class MeetingPage
     [Inject] public StatusEnvoy? StatusEnvoy { get; set; }
     [Inject] public MeetingEnvoy? MeetingEnvoy { get; set; }
     [Inject] public SignatureEnvoy? SignatureEnvoy { get; set; }
+    [CascadingParameter] public IModalService? Modal { get; set; }
 
     private string? _speaker;
+    private string? _company;
     private string? _topic;
     private string? _date;
 
@@ -22,6 +27,8 @@ public partial class MeetingPage
     private readonly Dictionary<int, MeetingSignature> _signatures = new();
     private readonly Dictionary<int, AttendanceRecord> _attendance = new();
     private readonly Dictionary<int, string> _statusMap = new();
+
+    private List<Meeting> meeting;
 
     protected override void OnInitialized()
     {
@@ -42,9 +49,10 @@ public partial class MeetingPage
         
         Task.Run(async () =>
         {
-            var meeting = await MeetingEnvoy.GetMeeting(Id);
+            meeting = await MeetingEnvoy.GetMeeting(Id);
             _speaker = meeting?[0].Speaker;
             _topic = meeting?[0].Topic;
+            _company = meeting?[0].Company;
             _date = meeting?[0].MeetingDate.Date.ToString("MM/dd/yyyy");
             await InvokeAsync(StateHasChanged);
         });
@@ -63,14 +71,6 @@ public partial class MeetingPage
                 _statusMap[it.EmployeeId] = it.Status;
             Console.WriteLine(it.Status);
         });
-    }
-
-    private void UpdateStatus(int? employeeId, string? status)
-    {
-        if (status is null || employeeId is null) return;
-        var couldAdd = _statusMap.TryAdd(employeeId.Value, status); 
-        if(!couldAdd)
-            _statusMap[employeeId.Value] = status;
     }
     
     private void UpdateStatus(Tuple<int?, string?> tuple)
@@ -107,10 +107,16 @@ public partial class MeetingPage
         return Task.CompletedTask;
     }
 
-    private Task SendToServer()
+    private async Task SendToServer()
     {
-        if (MeetingEnvoy is null || SignatureEnvoy is null) return Task.CompletedTask;
+        if (MeetingEnvoy is null || SignatureEnvoy is null) return;
 
+        meeting.FirstOrDefault().Topic = _topic;
+        meeting.FirstOrDefault().Speaker = _speaker;
+        meeting.FirstOrDefault().Company = _company;
+        
+        await MeetingEnvoy.UpdateMeeting(meeting.FirstOrDefault());
+        
         _attendance.Values.ToList().ForEach(it =>
         {
             var couldGet = _statusMap.TryGetValue(it.EmployeeId, out var s);
@@ -127,8 +133,22 @@ public partial class MeetingPage
             await SignatureEnvoy.AddSignature(_signatures.Values.ToList());
         });
         
-        return Task.CompletedTask;
+        return;
     }
+    
+    private async Task ShowNotes()
+    {
+        var parameters = new ModalParameters();
+
+        var modalRef = Modal?.Show<MyTestPage>("Add Notes", parameters, new ModalOptions {HideHeader = true});
+        var modalResult = await modalRef?.Result!;
+        
+        if(modalResult.Cancelled)
+            return;
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    
 }
 
 

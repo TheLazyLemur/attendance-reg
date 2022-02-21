@@ -6,6 +6,7 @@ public class Meeting
 {
     [JsonPropertyName("id")] public int? Id { get; set; }
     [JsonPropertyName("name")] public string? Name { get; set; }
+    [JsonPropertyName("company")] public string? Company { get; set; }
     [JsonPropertyName("topic")] public string? Topic { get; set; }
     [JsonPropertyName("speaker")] public string? Speaker { get; set; }
     [JsonPropertyName("office_id")] public int OfficeId { get; set; }
