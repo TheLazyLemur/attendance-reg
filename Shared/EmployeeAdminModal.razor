@@ -3,20 +3,22 @@
 <EditForm Model="@Employee" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
-    <h1 class="text-2xl font-semibold">Add Employee</h1>
-    <div class="flex flex-col space-y-5 my-5">
-        <div class="flex space-x-5">
+    <div class="md:px-20 pt-6">
+        <h1 class="text-center text-2xl font-bold text-gray-500 mb-10">Add Employee</h1>
+        <div class="space-y-4">
+            <div class="flex flex-col">
             <label for="name">Name</label>
             <InputText class="border rounded-md" id="name" @bind-Value="Employee.Name"/>
-        </div>
-        <div class="space-x-5">
+            </div>
+            <div class="flex flex-col">
             <label for="surname">Surname</label>
             <InputText class="border rounded-md" id="surname" @bind-Value="Employee.Surname"/>
-        </div>
-        <div class="flex space-x-5">
+            </div>
+            <div class="flex flex-col">
             <label for="title">Title</label>
             <InputText class="border rounded-md" id="title" @bind-Value="Employee.Title"/>
+            </div>
+            <button class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300" type="submit">Submit</button>
         </div>
-        <button class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300 w-32" type="submit">Submit</button>
     </div>
 </EditForm>
