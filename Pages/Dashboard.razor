@@ -39,7 +39,11 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <div class="h-10 w-10">
-                                        <button class="px-2 py-1 text-white bg-red-500 rounded" @onclick="@(async () => { await DeleteMeeting(meeting.Id!.Value); })">X</button>
+                                        <button class="text-gray-400 hover:text-red-500 rounded" @onclick="@(async () => { await DeleteMeeting(meeting.Id!.Value); })">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -58,8 +62,8 @@
             }
         </div>
         <div class="my-5 flex space-x-5">
-            <button @onclick="@(async () => { await ShowAddMeeting(); })" class="bg-blue-500 text-white py-2 px-3 rounded-lg">New Meeting</button>
-            <button @onclick="@(() => { NavigationManager.NavigateTo("admin"); })" class="bg-blue-500 text-white py-2 px-3 rounded-lg">Admin</button>
+            <button @onclick="@(async () => { await ShowAddMeeting(); })" class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300">New Meeting</button>
+            <button @onclick="@(() => { NavigationManager.NavigateTo("admin"); })" class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300">Admin</button>
         </div>
     </div>
 </div>
