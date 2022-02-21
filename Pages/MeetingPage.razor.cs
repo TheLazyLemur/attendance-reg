@@ -1,3 +1,4 @@
+using System.Globalization;
 using attendance_reg.Pages.Envoys;
 using Microsoft.AspNetCore.Components;
 
@@ -44,7 +45,7 @@ public partial class MeetingPage
             var meeting = await MeetingEnvoy.GetMeeting(Id);
             _speaker = meeting?[0].Speaker;
             _topic = meeting?[0].Topic;
-            _date = meeting?[0].MeetingDate.ToString();
+            _date = meeting?[0].MeetingDate.Date.ToString(CultureInfo.InvariantCulture);
             await InvokeAsync(StateHasChanged);
         });
          
