@@ -58,6 +58,11 @@ public partial class TestReport
     {
         var sb = new StringBuilder();
 
+        sb.Append("<h4> Name: " + meeting.Name + "</h4>");
+        sb.Append("<h4> Speaker: " + meeting.Speaker + "</h4>");
+        sb.Append("<h4> Topic: " + meeting.Topic + "</h4>");
+        sb.Append("<h4> Company: " + meeting.Company + "</h4>");
+        
         sb.AppendLine("<table style=\"width:100%\">");
         sb.AppendLine("<tr style=\"border: 1px solid black;\">");
         sb.Append("<th style=\"border: 1px solid black;\">"); 
