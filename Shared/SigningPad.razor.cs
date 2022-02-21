@@ -36,7 +36,7 @@ public partial class SigningPad
                                                           $"meeting_id=eq.{MeetingId}" +
                                                           $"&employee_id=eq.{EmployeeId}");
         var sig = sigs.FirstOrDefault();
-        src = sig != null ? sig.DataUrl : string.Empty;
+        src = sig != null ? sig.DataUrl : "https://via.placeholder.com/150?text=";
     }
 
     private async Task ShowSigModal()
