@@ -1,33 +1,26 @@
-
 <EditForm Model="@Meeting" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
-    <h1 class="text-2xl font-semibold">Add Meeting</h1>
-    
-    <div class="flex flex-col space-y-5 my-5">
-        <div class="flex space-x-5">
-            <label for="name">Meeting Title</label>
-            <InputText class="border rounded-md" id="name" @bind-Value="Meeting.Name"/>
+    <div class="md:px-20 pt-6">
+          <h1 class="text-center text-2xl font-bold text-gray-500 mb-10">Add Meeting</h1>
+        <div class="space-y-4">
+            <div class="flex flex-col">
+                <label for="name">Title:</label>
+                <InputText class="border rounded-md" id="name" @bind-Value="Meeting.Name"/>
+            </div>
+            <div class="flex flex-col">
+                <label for="topic">Topic:</label>
+                <InputText class="border rounded-md" id="topic" @bind-Value="Meeting.Topic"/>
+            </div>
+            <div class="flex flex-col">
+                <label for="speaker">Speaker:</label>
+                <InputText class="border rounded-md" id="speaker" @bind-Value="Meeting.Speaker"/>
+            </div>
+            <div class="flex flex-col">
+                <label for="birthday">Date:</label>
+                <input class="border rounded-md" @onchange="@(e => { Meeting.MeetingDate = DateTime.Parse(e.Value.ToString()); })" type="date" id="birthday" name="birthday">
+            </div>
+            <button class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300" type="submit">Submit</button>
         </div>
-        <div class="flex space-x-5">
-            <label for="topic">Meeting Topic</label>
-            <InputText class="border rounded-md" id="topic" @bind-Value="Meeting.Topic"/>
-        </div>
-        <div class="flex space-x-5">
-            <label for="speaker">Meeting Speaker</label>
-            <InputText class="border rounded-md" id="speaker" @bind-Value="Meeting.Speaker"/>
-        </div>
-
-        <div class="flex space-x-5">
-            <label for="birthday">Meeting Date:</label>
-            <input  class="border rounded-md" @onchange="@(e => { Meeting.MeetingDate = DateTime.Parse(e.Value.ToString()); })" type="date" id="birthday" name="birthday">
-        </div>
-
-        <div class="flex space-x-5">
-            <label for="appt">Select a time:</label>
-            <input class="border rounded-md" @onchange="@(e => { Console.WriteLine(e.Value?.ToString()); })" type="time" id="appt" name="appt">
-        </div>
-        
-    </div>
-    <button class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300" type="submit">Submit</button>
+      </div>
 </EditForm>
