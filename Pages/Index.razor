@@ -1,14 +1,14 @@
 @page "/"
 
 <div class="h-full w-full flex">
-    <div class="m-auto space-y-5">
+    <div class="m-auto space-y-5 text-center">
         <h1 class="text-4xl">Pick An Office</h1>
         <div class="space-y-5">
             @if (Offices is not null)
             {
                 if (Offices.Any())
                 {
-                    @foreach (var office in Offices)
+                    @foreach (var office in Offices.OrderByDescending(it => it.Name.Length))
                     {
                         <div class="text-xl">
                             <button class="hover:text-blue-500" @onclick="@(() => {AppState.SaveOfficeId(office.Id.ToString());NavigationManager.NavigateTo("dashboard");})">@office.Name Office</button>
