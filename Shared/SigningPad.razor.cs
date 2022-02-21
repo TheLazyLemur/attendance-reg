@@ -35,7 +35,7 @@ public partial class SigningPad
         var sigs = await SignatureEnvoy.GetSignatureImage($"" +
                                                           $"meeting_id=eq.{MeetingId}" +
                                                           $"&employee_id=eq.{EmployeeId}");
-        var sig = sigs.FirstOrDefault();
+        var sig = sigs.MaxBy(it => it.Id);
         src = sig != null ? sig.DataUrl : "https://via.placeholder.com/150?text=";
     }
 

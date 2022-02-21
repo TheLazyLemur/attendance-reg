@@ -7,4 +7,6 @@ public class MeetingSignature
    [JsonPropertyName("meeting_id")]public int MeetingId { get; set; }
    [JsonPropertyName("employee_id")]public int EmployeeId { get; set; }
    [JsonPropertyName("data_url")]public string DataUrl { get; set; }
+   [JsonPropertyName("id")]
+   public int? Id { get; set; }
 }

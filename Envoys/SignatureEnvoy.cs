@@ -21,6 +21,11 @@ public class SignatureEnvoy
     
     public async Task<List<MeetingSignature>?> GetSignatureImage(string filter)
     {
-       return await _supabaseEnvoy.Get<List<MeetingSignature>>(SupabaseResources.SignatureTable, $"?select=data_url&{filter}");
+      var toReturn =  await _supabaseEnvoy.Get<List<MeetingSignature>>(SupabaseResources.SignatureTable, $"?select=data_url&{filter}");
+      toReturn = new List<MeetingSignature>()
+      {
+          toReturn.MaxBy(it => it.Id)
+      }; 
+      return toReturn;
     }
 }

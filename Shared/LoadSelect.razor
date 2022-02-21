@@ -38,7 +38,7 @@
     protected override async void OnInitialized()
     {
         var regs = await MeetingEnvoy.GetAttendanceRegister($"meeting_id=eq.{MeetingId}&employee_id=eq.{EmployeeId}");
-        regs = regs.Where(it => it.EmployeeId == EmployeeId && it.MeetingId == MeetingId).ToList();
+        regs = regs.OrderByDescending(it => it.Id).Where(it => it.EmployeeId == EmployeeId && it.MeetingId == MeetingId).ToList();
        
         value = string.IsNullOrEmpty(regs.FirstOrDefault()?.Status) ? "Zoom" : regs.FirstOrDefault()?.Status;
         StateHasChanged();

@@ -8,5 +8,7 @@ public class AttendanceRecord
     [JsonPropertyName("meeting_id")] public int MeetingId { get; set; }
     [JsonPropertyName("office_id")] public int OfficeId { get; set; }
     [JsonPropertyName("status")] public string? Status { get; set; }  
-    [JsonPropertyName("date_created")] public DateTime DateCreated { get; set; }  
+    [JsonPropertyName("date_created")] public DateTime DateCreated { get; set; }
+    [JsonPropertyName("id")]
+    public int? Id { get; set; }
 }
