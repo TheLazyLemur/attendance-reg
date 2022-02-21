@@ -45,7 +45,7 @@ public partial class MeetingPage
             var meeting = await MeetingEnvoy.GetMeeting(Id);
             _speaker = meeting?[0].Speaker;
             _topic = meeting?[0].Topic;
-            _date = meeting?[0].MeetingDate.Date.ToString(CultureInfo.InvariantCulture);
+            _date = meeting?[0].MeetingDate.Date.ToString("MM/dd/yyyy");
             await InvokeAsync(StateHasChanged);
         });
          
