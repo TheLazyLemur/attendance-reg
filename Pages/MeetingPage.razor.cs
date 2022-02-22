@@ -1,7 +1,4 @@
-using System.Globalization;
 using attendance_reg.Pages.Envoys;
-using attendance_reg.Shared;
-using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -26,9 +23,9 @@ public partial class MeetingPage
 
     private readonly Dictionary<int, MeetingSignature> _signatures = new();
     private readonly Dictionary<int, AttendanceRecord> _attendance = new();
-    private readonly Dictionary<int, string> _statusMap = new();
+    private readonly Dictionary<int, string?> _statusMap = new();
 
-    private List<Meeting> meeting;
+    private List<Meeting>? _meeting;
 
     protected override void OnInitialized()
     {
@@ -49,11 +46,11 @@ public partial class MeetingPage
         
         Task.Run(async () =>
         {
-            meeting = await MeetingEnvoy.GetMeeting(Id);
-            _speaker = meeting?[0].Speaker;
-            _topic = meeting?[0].Topic;
-            _company = meeting?[0].Company;
-            _date = meeting?[0].MeetingDate.Date.ToString("MM/dd/yyyy");
+            _meeting = await MeetingEnvoy.GetMeeting(Id);
+            _speaker = _meeting?[0].Speaker;
+            _topic = _meeting?[0].Topic;
+            _company = _meeting?[0].Company;
+            _date = _meeting?[0].MeetingDate.Date.ToString("MM/dd/yyyy");
             await InvokeAsync(StateHasChanged);
         });
          
@@ -63,10 +60,13 @@ public partial class MeetingPage
     
     private async void LoadStatusMap()
     {
+        if(MeetingEnvoy is null) return;
+
         var x = await MeetingEnvoy.GetAttendanceRegister();
-        x.Where(it => it.MeetingId == int.Parse(Id)).ToList().ForEach(it =>
+
+        x?.Where(it => Id != null && it.MeetingId == int.Parse(Id)).ToList().ForEach(it =>
         {
-            var couldAdd = _statusMap.TryAdd(it.EmployeeId, it.Status);
+            var couldAdd = it.Status != null && _statusMap.TryAdd(it.EmployeeId, it.Status);
             if (!couldAdd)
                 _statusMap[it.EmployeeId] = it.Status;
             Console.WriteLine(it.Status);
@@ -111,16 +111,19 @@ public partial class MeetingPage
     {
         if (MeetingEnvoy is null || SignatureEnvoy is null) return;
 
-        var m = meeting.FirstOrDefault();
-        if (m is null) return;
+        if (_meeting != null)
+        {
+            var m = _meeting.FirstOrDefault();
+            if (m is null) return;
            
-        m.Topic = _topic;
-        m.Speaker = _speaker;
-        m.Company = _company;
+            m.Topic = _topic;
+            m.Speaker = _speaker;
+            m.Company = _company;
+        }
 
         Task.Run(async () =>
         {
-        await MeetingEnvoy.UpdateMeeting(meeting.FirstOrDefault());
+            if (_meeting != null) await MeetingEnvoy.UpdateMeeting(_meeting.FirstOrDefault());
         });
         
         _attendance.Values.ToList().ForEach(it =>
@@ -138,23 +141,7 @@ public partial class MeetingPage
         {
             await SignatureEnvoy.AddSignature(_signatures.Values.ToList());
         });
-        
-        return;
     }
-    
-    private async Task ShowNotes()
-    {
-        var parameters = new ModalParameters();
-
-        var modalRef = Modal?.Show<MyTestPage>("Add Notes", parameters, new ModalOptions {HideHeader = true});
-        var modalResult = await modalRef?.Result!;
-        
-        if(modalResult.Cancelled)
-            return;
-        await InvokeAsync(StateHasChanged);
-    }
-    
-    
 }
 
 

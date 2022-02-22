@@ -11,7 +11,6 @@ public partial class MeetingAdmin
     [Inject] public MeetingEnvoy? MeetingEnvoy { get; set; }
     [CascadingParameter] public IModalService? Modal { get; set; }
     
-    private bool _displayModal = false;
     private readonly Meeting? _meeting = new();
 
     private List<Meeting>? _meetings;

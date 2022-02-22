@@ -17,10 +17,17 @@
                             @employee.Name @employee.Surname
                         </div>
                         <div class="my-auto">
-                            <SigningPad SaveDataUrl="@(Save)" MeetingId="@Id" EmployeeId="@(employee.Id.Value)" Id="@employee.Name"/>
-                        </div>
-                        <div>
-                            <LoadSelect Id="@employee.Id.Value" Statuses="_statuses" EmployeeId="employee.Id.Value" MeetingId="@(int.Parse(Id))" Callback="UpdateStatus"></LoadSelect>
+                            @if (employee.Id != null)
+                            {
+                                <div class="my-auto flex">
+                                    <SigningPad SaveDataUrl="@Save" MeetingId="@Id" EmployeeId="@employee.Id.Value" Id="@employee.Name"/>
+                                    @if (Id != null)
+                                    {
+                                        <LoadSelect Id="@employee.Id.Value" Statuses="@_statuses" EmployeeId="@employee.Id.Value" MeetingId="@int.Parse(Id)" Callback="@UpdateStatus"></LoadSelect>
+                                    }
+                                </div>
+                            }
+ 
                         </div>
                     </div>
                 }

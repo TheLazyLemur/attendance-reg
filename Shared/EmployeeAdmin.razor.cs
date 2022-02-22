@@ -11,7 +11,6 @@ public partial class EmployeeAdmin
     [CascadingParameter] public IModalService? Modal { get; set; }
     [Inject] public EmployeeEnvoy? EmployeeEnvoy { get; set; }
     
-    private bool _displayModal = false;
     private Employee? _employee = new();
     private List<Employee>? _employees;
 

@@ -11,7 +11,6 @@ public partial class MeetingAdminModal
     
     private async Task HandleValidSubmit()
     {
-        Console.WriteLine(Meeting.MeetingDate.ToString());
         await MeetingEnvoy?.AddMeeting(Meeting)!;
         await InvokeAsync(StateHasChanged);
     }

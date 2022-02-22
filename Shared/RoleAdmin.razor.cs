@@ -11,7 +11,6 @@ public partial class RoleAdmin
     [CascadingParameter] public IModalService? Modal { get; set; }
     [Inject] public StatusEnvoy? StatusEnvoy { get; set; }
     
-    private bool _displayModal = false;
     private Status _status = new();
 
     private List<Status>? _statuses;

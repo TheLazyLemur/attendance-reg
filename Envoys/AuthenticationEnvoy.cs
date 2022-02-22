@@ -12,7 +12,7 @@ public class AuthenticationEnvoy
       JsRuntime = jsRuntime;
    }
 
-   public async Task<string> Login()
+   public async Task<string?> Login()
    {
       var t = await JsRuntime.InvokeAsync<string>("sessionStorage.getItem", "token");
 
