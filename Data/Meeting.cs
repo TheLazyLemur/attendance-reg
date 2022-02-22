@@ -11,4 +11,7 @@ public class Meeting
     [JsonPropertyName("speaker")] public string? Speaker { get; set; }
     [JsonPropertyName("office_id")] public int OfficeId { get; set; }
     [JsonPropertyName("meeting_date")] public DateTime MeetingDate { get; set; }
+    [JsonPropertyName("product_training")] public bool? ProductTraining { get; set; }
+    [JsonPropertyName("asset_management_presentation")] public bool? AssetManagementPresentation { get; set; }
+    [JsonPropertyName("internal_training")] public bool? InternalTraining { get; set; }
 }

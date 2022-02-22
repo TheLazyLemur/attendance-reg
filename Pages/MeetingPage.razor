@@ -57,17 +57,17 @@
     <div class="flex space-x-5">
         <div>
             <label class="my-auto" for="product-training">Product Training</label>
-            <input class="my-auto" id="product-training" type="checkbox">
+            <input @bind="@_productTraining" class="my-auto" id="product-training" type="checkbox">
         </div>
 
         <div>
             <label class="my-auto" for="asset-management">Asset Management Presentation</label>
-            <input class="my-auto" id="asset-management" type="checkbox">
+            <input @bind="@_assetManagementPresentation" class="my-auto" id="asset-management" type="checkbox">
         </div>
 
         <div>
             <label class="my-auto" for="internal-training">Internal Training</label>
-            <input class="my-auto" id="internal-training" type="checkbox">
+            <input @bind="@_internalTraining" class="my-auto" id="internal-training" type="checkbox">
         </div>
     </div>
         <div>

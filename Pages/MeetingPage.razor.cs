@@ -17,6 +17,10 @@ public partial class MeetingPage
     private string? _company;
     private string? _topic;
     private string? _date;
+    
+    private bool _assetManagementPresentation;
+    private bool _productTraining;
+    private bool _internalTraining;
 
     private List<Employee>? _employees = new();
     private List<Status>? _statuses = new();
@@ -50,6 +54,10 @@ public partial class MeetingPage
             _speaker = _meeting?[0].Speaker;
             _topic = _meeting?[0].Topic;
             _company = _meeting?[0].Company;
+            _productTraining = _meeting?[0].ProductTraining ?? false;
+            _internalTraining = _meeting?[0].InternalTraining ?? false;
+            _assetManagementPresentation = _meeting?[0].AssetManagementPresentation ?? false;
+
             _date = _meeting?[0].MeetingDate.Date.ToString("MM/dd/yyyy");
             await InvokeAsync(StateHasChanged);
         });
@@ -119,6 +127,14 @@ public partial class MeetingPage
             m.Topic = _topic;
             m.Speaker = _speaker;
             m.Company = _company;
+            
+            m.ProductTraining = _productTraining;
+            m.InternalTraining = _internalTraining;
+            m.AssetManagementPresentation = _assetManagementPresentation;
+
+            Console.WriteLine(m.ProductTraining);
+            Console.WriteLine(m.InternalTraining);
+            Console.WriteLine(m.AssetManagementPresentation);
         }
 
         Task.Run(async () =>
