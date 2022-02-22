@@ -31,6 +31,7 @@ public class AuthenticationEnvoy
       var response = await result.Content.ReadAsStringAsync();
       var token = JsonSerializer.Deserialize<TokenResponse>(response);
 
+      if (token is null) return string.Empty;
       await JsRuntime.InvokeAsync<string>("sessionStorage.setItem", "token", token.Token);
       return token.Token;
 

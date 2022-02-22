@@ -9,7 +9,7 @@ public class SupabaseEnvoy
 {
     private readonly AuthenticationEnvoy _authenticationEnvoy;
     private readonly IToastService _toastService;
-    private static Dictionary<string, string> _cachedTokens = new();
+    private static Dictionary<string, string?> _cachedTokens = new();
 
     public SupabaseEnvoy(AuthenticationEnvoy authenticationEnvoy, IToastService toastService)
     {
@@ -52,7 +52,7 @@ public class SupabaseEnvoy
                 return employees;
             }
         }
-        catch (Exception e)
+        catch (Exception _)
         {
             _toastService.ShowError($"failed to fetch {resource}.");
         }
@@ -82,7 +82,7 @@ public class SupabaseEnvoy
             _toastService.ShowSuccess($"Deleted {resource} with query of {query}");
             _cachedTokens = new Dictionary<string, string?>();
         }
-        catch (Exception e)
+        catch (Exception _)
         {
             _toastService.ShowError($"failed to delete {resource}.");
         }

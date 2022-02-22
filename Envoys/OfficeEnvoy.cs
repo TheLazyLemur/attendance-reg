@@ -9,7 +9,7 @@ public class OfficeEnvoy
         _supabaseEnvoy = supabaseEnvoy;
     } 
     
-    public async Task<List<Office>> GetOffices()
+    public async Task<List<Office>?> GetOffices()
     {
         var result = await _supabaseEnvoy.Get<List<Office>>(SupabaseResources.OfficeTable, "?select=*");
         return result;

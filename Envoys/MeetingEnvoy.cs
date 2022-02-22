@@ -28,12 +28,16 @@ public class MeetingEnvoy
 
     public async Task AddMeeting(Meeting? meeting)
     {
+        if (meeting is null) return;
+        
         meeting.OfficeId = int.Parse(await _appState.GetOfficeId());
         await _supabaseEnvoy.Post(SupabaseResources.MeetingTable, meeting);
     }
     
     public async Task UpdateMeeting(Meeting? meeting)
     {
+        if (meeting is null) return;
+        
         meeting.OfficeId = int.Parse(await _appState.GetOfficeId());
         await _supabaseEnvoy.Put(SupabaseResources.MeetingTable, meeting, $"id=eq.{meeting.Id}");
     }
@@ -50,11 +54,13 @@ public class MeetingEnvoy
     
     public async Task SendAttendanceRegister(List<AttendanceRecord> attendanceRecords)
     {
-        attendanceRecords.ForEach(async it =>
-        {
-            it.OfficeId = int.Parse(await _appState.GetOfficeId());
-        });
+        attendanceRecords.ForEach(PostRegister);
         
         await _supabaseEnvoy.Post(SupabaseResources.AttendanceTable, attendanceRecords);
+    }
+
+    private async void PostRegister(AttendanceRecord it)
+    {
+        it.OfficeId = int.Parse(await _appState.GetOfficeId());
     }
 }

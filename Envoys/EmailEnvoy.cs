@@ -1,34 +1,35 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace attendance_reg.Pages.Envoys;
 
 public class To
 {
-   public string email { get; set; }
+   [JsonPropertyName("email")] public string? Email { get; set; }
 }
 
 public class Personalization
 {
-   public List<To> to { get; set; }
-   public string subject { get; set; }
+   [JsonPropertyName("to")] public List<To>? To { get; set; }
+   [JsonPropertyName("subject")] public string? Subject { get; set; }
 }
 
 public class From
 {
-   public string email { get; set; }
+   [JsonPropertyName("email")] public string? Email { get; set; }
 }
 
 public class Content
 {
-   public string type { get; set; }
-   public string value { get; set; }
+   [JsonPropertyName("type")] public string? Type { get; set; }
+   [JsonPropertyName("value")] public string? Value { get; set; }
 }
 
 public class Root
 {
-   public List<Personalization> personalizations { get; set; }
-   public From from { get; set; }
-   public List<Content> content { get; set; }
+   [JsonPropertyName("personalizations")] public List<Personalization>? Personalizations { get; set; }
+   [JsonPropertyName("from")] public From? From { get; set; }
+   [JsonPropertyName("content")] public List<Content>? Content { get; set; }
 }
 
 
@@ -38,21 +39,21 @@ public class EmailEnvoy
    {
       var email = new Root
       {
-         personalizations = new List<Personalization>
+         Personalizations = new List<Personalization>
          {
             new()
             {
-               to = new List<To> { new() { email = to } },
-               subject = subject
+               To = new List<To> { new() { Email = to } },
+               Subject = subject
             }
          },
-         @from = new From {email = "hr.sa@holbornassets.com"},
-         content = new List<Content>
+         From = new From {Email = "hr.sa@holbornassets.com"},
+         Content = new List<Content>
          {
             new()
             {
-               type = "text/html",
-               value = content
+               Type = "text/html",
+               Value = content
             }
          }
       };

@@ -24,6 +24,9 @@ public class EmployeeEnvoy
 
     public async Task AddEmployee(Employee? employeeEnvoy)
     {
+        if (employeeEnvoy is null)
+            return;
+        
         employeeEnvoy.OfficeId = int.Parse(await _appState.GetOfficeId());
         await _supabaseEnvoy.Post(SupabaseResources.EmployeeTable, employeeEnvoy);
     }
