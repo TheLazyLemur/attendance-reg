@@ -14,6 +14,6 @@ public partial class EmployeeAdminModal
 
     private async Task HandleValidSubmit()
     {
-        await EmployeeEnvoy.AddEmployee(Employee);
+        await EmployeeEnvoy?.AddEmployee(Employee)!;
     }
 }

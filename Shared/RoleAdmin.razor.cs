@@ -9,7 +9,7 @@ namespace attendance_reg.Shared;
 public partial class RoleAdmin
 {
     [CascadingParameter] public IModalService? Modal { get; set; }
-    [Inject] public StatusEnvoy StatusEnvoy { get; set; }
+    [Inject] public StatusEnvoy? StatusEnvoy { get; set; }
     
     private bool _displayModal = false;
     private Status _status = new();
@@ -18,17 +18,20 @@ public partial class RoleAdmin
 
     protected override async Task OnInitializedAsync()
     {
-      _statuses = await StatusEnvoy.GetStatuses();
+        if(StatusEnvoy is null) return;
+        _statuses = await StatusEnvoy.GetStatuses();
     }
     
     private async Task HandleValidSubmit()
     {
+        if(StatusEnvoy is null) return;
         await StatusEnvoy.AddStatus(_status);
         _statuses = await StatusEnvoy.GetStatuses();
         await InvokeAsync(StateHasChanged);
     }
     async Task ShowAddRole()
     {
+        if(StatusEnvoy is null) return;
         var parameters = new ModalParameters();
         parameters.Add(nameof(RoleAdminModal.Status), _status);
         parameters.Add(nameof(RoleAdminModal.StatusEnvoy), StatusEnvoy);

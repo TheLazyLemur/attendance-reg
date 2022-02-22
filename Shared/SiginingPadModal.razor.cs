@@ -8,18 +8,18 @@ namespace attendance_reg.Shared;
 public partial class SiginingPadModal : IDisposable
 {
      [Inject]
-     private IJSRuntime JsRuntime { get; set; }
+     private IJSRuntime? JsRuntime { get; set; }
      
      [Parameter]
      public int EmployeeId { get; set; }
      
      [Parameter]
-     public string Id { get; set; }
+     public string? Id { get; set; }
      
      [Parameter]
      public EventCallback<Dictionary<string, string>> SaveDataUrl { get; set; }
      
-     [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+     [CascadingParameter] BlazoredModalInstance? ModalInstance { get; set; }
      
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -27,7 +27,8 @@ public partial class SiginingPadModal : IDisposable
          {
               try
               {
-                   await JsRuntime.InvokeVoidAsync("loadSig", Id);
+                   if(JsRuntime is not null)
+                        await JsRuntime.InvokeVoidAsync("loadSig", Id);
               }
               catch (Exception e)
               {
@@ -37,7 +38,9 @@ public partial class SiginingPadModal : IDisposable
     }
 
     private async Task SaveSignature()
-    {
+    { 
+         if(ModalInstance is null || JsRuntime is null) return;
+         
          var result = await JsRuntime.InvokeAsync<string>("saveSig", Id);
 
          var dict = new Dictionary<string, string>
@@ -52,6 +55,7 @@ public partial class SiginingPadModal : IDisposable
 
     public async void Dispose()
     {
-         await JsRuntime.InvokeVoidAsync("unbindSig", Id);
+         if (JsRuntime is not null)
+              await JsRuntime.InvokeVoidAsync("unbindSig", Id);
     }
 }

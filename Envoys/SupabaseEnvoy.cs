@@ -38,7 +38,6 @@ public class SupabaseEnvoy
             if (b && cachedToken != null)
             {
                 var employees = JsonSerializer.Deserialize<T>(cachedToken);
-                Console.WriteLine("Using Cache");
                 return employees;
             }
             else
@@ -47,13 +46,12 @@ public class SupabaseEnvoy
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 var employees = JsonSerializer.Deserialize<T>(body);
-                _cachedTokens.TryAdd(resource+query, body);
-                Console.WriteLine("Not Using Cache");
                 return employees;
             }
         }
-        catch (Exception _)
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             _toastService.ShowError($"failed to fetch {resource}.");
         }
 
@@ -82,8 +80,9 @@ public class SupabaseEnvoy
             _toastService.ShowSuccess($"Deleted {resource} with query of {query}");
             _cachedTokens = new Dictionary<string, string?>();
         }
-        catch (Exception _)
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             _toastService.ShowError($"failed to delete {resource}.");
         }
    }
@@ -114,7 +113,6 @@ public class SupabaseEnvoy
         using var response = await client.SendAsync(request);
         try
         {
-            Console.WriteLine("Uploading to Supabase");
             response.EnsureSuccessStatusCode();
             _toastService.ShowSuccess($"Created new {resource}");
             _cachedTokens = new Dictionary<string, string?>();
@@ -154,7 +152,6 @@ public class SupabaseEnvoy
         using var response = await client.SendAsync(request);
         try
         {
-            Console.WriteLine("Uploading to Supabase");
             response.EnsureSuccessStatusCode();
             _toastService.ShowSuccess($"Created new {resource}");
             _cachedTokens = new Dictionary<string, string?>();

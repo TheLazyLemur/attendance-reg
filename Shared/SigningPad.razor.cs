@@ -8,16 +8,16 @@ namespace attendance_reg.Shared;
 public partial class SigningPad
 {
      [Inject]
-     private IJSRuntime JsRuntime { get; set; }
+     private IJSRuntime? JsRuntime { get; set; }
     
     [CascadingParameter]
     public IModalService? Modal { get; set; }
 
     [Parameter]
-    public string Id { get; set; }
+    public string? Id { get; set; }
     
     [Parameter]
-    public string MeetingId { get; set; }
+    public string? MeetingId { get; set; }
     
     [Parameter]
     public int EmployeeId { get; set; }
@@ -26,23 +26,27 @@ public partial class SigningPad
     public EventCallback<Dictionary<string, string>> SaveDataUrl { get; set; }
     
     [Inject]
-    private SignatureEnvoy SignatureEnvoy { get; set; }
+    private SignatureEnvoy? SignatureEnvoy { get; set; }
 
-    private string src { get; set; }
+    private string? Src { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        if(SignatureEnvoy is null) return;
+        
         var sigs = await SignatureEnvoy.GetSignatureImage($"" +
                                                           $"meeting_id=eq.{MeetingId}" +
                                                           $"&employee_id=eq.{EmployeeId}");
+        if(sigs is null) return;
+        
         try
         {
-            var sig = sigs.MaxBy(it => it.Id);
-            src = sig != null ? sig.DataUrl : "https://via.placeholder.com/150?text=";
+            var sig = sigs.MaxBy(it => it?.Id);
+            Src = sig != null ? sig.DataUrl : "https://via.placeholder.com/150?text=";
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            src = "https://via.placeholder.com/150?text=";
+            Src = "https://via.placeholder.com/150?text=";
         }
     }
 
@@ -60,7 +64,7 @@ public partial class SigningPad
             return;
 
         var modalData = modalResult.Data as string;
-        src = modalData;
+        Src = modalData;
         StateHasChanged();
     }
 

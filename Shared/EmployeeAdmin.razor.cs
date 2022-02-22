@@ -9,7 +9,7 @@ namespace attendance_reg.Shared;
 public partial class EmployeeAdmin
 {
     [CascadingParameter] public IModalService? Modal { get; set; }
-    [Inject] public EmployeeEnvoy EmployeeEnvoy { get; set; }
+    [Inject] public EmployeeEnvoy? EmployeeEnvoy { get; set; }
     
     private bool _displayModal = false;
     private Employee? _employee = new();
@@ -17,7 +17,7 @@ public partial class EmployeeAdmin
 
     protected override async Task OnInitializedAsync()
     {
-        _employees = await EmployeeEnvoy.GetEmployees();
+        _employees = await EmployeeEnvoy?.GetEmployees()!;
     }
     
     private async Task ShowAddEmployee()
@@ -31,7 +31,7 @@ public partial class EmployeeAdmin
         
         if(modalResult.Cancelled)
             return;
-        _employees = await EmployeeEnvoy.GetEmployees();
+        _employees = await EmployeeEnvoy?.GetEmployees()!;
         await InvokeAsync(StateHasChanged);
     }
 }

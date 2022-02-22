@@ -107,15 +107,21 @@ public partial class MeetingPage
         return Task.CompletedTask;
     }
 
-    private async Task SendToServer()
+    private void SendToServer()
     {
         if (MeetingEnvoy is null || SignatureEnvoy is null) return;
 
-        meeting.FirstOrDefault().Topic = _topic;
-        meeting.FirstOrDefault().Speaker = _speaker;
-        meeting.FirstOrDefault().Company = _company;
-        
+        var m = meeting.FirstOrDefault();
+        if (m is null) return;
+           
+        m.Topic = _topic;
+        m.Speaker = _speaker;
+        m.Company = _company;
+
+        Task.Run(async () =>
+        {
         await MeetingEnvoy.UpdateMeeting(meeting.FirstOrDefault());
+        });
         
         _attendance.Values.ToList().ForEach(it =>
         {

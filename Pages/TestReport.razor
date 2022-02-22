@@ -38,7 +38,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="">
-                                        <div class="text-sm font-medium text-gray-900">@report.Employee.Name @report.Employee.Surname</div>
+                                        <div class="text-sm font-medium text-gray-900">@report.Employee?.Name @report.Employee?.Surname</div>
                                     </div>
                                 </div>
                             </td>
@@ -47,7 +47,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div class="h-10 w-10">
-                                <img class="object-cover h-full w-full" src="@report.Signature.DataUrl" alt="">
+                                <img class="object-cover h-full w-full" src="@(report.Signature?.DataUrl)" alt="">
                             </div>
                             </td>
                         </tr>

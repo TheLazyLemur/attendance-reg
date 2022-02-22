@@ -1,10 +1,10 @@
 @using attendance_reg.Pages
 @using attendance_reg.Pages.Envoys
 
-<select value="@value" @onchange="@(e => { UpdateStatus(EmployeeId, e.Value.ToString()); })" class="h-full bg-white my-auto" name="@Id" id="@Id">
-    @if (_statuses is not null)
+<select value="@_value" @onchange="@(e => { UpdateStatus(EmployeeId, e.Value?.ToString()); })" class="h-full bg-white my-auto" name="@Id" id="@Id">
+    @if (Statuses is not null)
     {
-        @foreach (var status in _statuses)
+        @foreach (var status in Statuses)
         {
             <option value="@status.Name">@status.Name</option>
         }
@@ -22,25 +22,30 @@
     public int MeetingId { get; set; }
     
     [Parameter]
-    public List<Status>? _statuses { get; set; }
+    public List<Status>? Statuses { get; set; }
     
     [Parameter]
     public EventCallback<Tuple<int?, string?>> Callback { get; set; }
     
     [Inject]
-    public MeetingEnvoy MeetingEnvoy { get; set; }
+    public MeetingEnvoy? MeetingEnvoy { get; set; }
     
     [Inject]
-    public IJSRuntime JsRuntime { get; set; }
+    public IJSRuntime? JsRuntime { get; set; }
 
-    private string? value = "Zoom";
+    private string? _value = "Zoom";
 
     protected override async void OnInitialized()
     {
+        if (MeetingEnvoy is null) return;
+        
         var regs = await MeetingEnvoy.GetAttendanceRegister($"meeting_id=eq.{MeetingId}&employee_id=eq.{EmployeeId}");
+        
+        if(regs is null) return;
+        
         regs = regs.OrderByDescending(it => it.Id).Where(it => it.EmployeeId == EmployeeId && it.MeetingId == MeetingId).ToList();
-       
-        value = string.IsNullOrEmpty(regs.FirstOrDefault()?.Status) ? "Zoom" : regs.FirstOrDefault()?.Status;
+        _value = string.IsNullOrEmpty(regs.FirstOrDefault()?.Status) ? "Zoom" : regs.FirstOrDefault()?.Status;
+        
         StateHasChanged();
     }
 
