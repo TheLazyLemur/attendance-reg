@@ -6,12 +6,12 @@ namespace attendance_reg.Pages;
 
 public partial class MeetingPage
 {
+    [CascadingParameter] public IModalService? Modal { get; set; }
     [Parameter] public string? Id { get; set; }
     [Inject] public EmployeeEnvoy? EmployeeEnvoy { get; set; }
     [Inject] public StatusEnvoy? StatusEnvoy { get; set; }
     [Inject] public MeetingEnvoy? MeetingEnvoy { get; set; }
     [Inject] public SignatureEnvoy? SignatureEnvoy { get; set; }
-    [CascadingParameter] public IModalService? Modal { get; set; }
 
     private string? _speaker;
     private string? _company;
@@ -83,12 +83,25 @@ public partial class MeetingPage
     
     private void UpdateStatus(Tuple<int?, string?> tuple)
     {
+        Console.WriteLine("Updating status");
         var (employeeId, status) = tuple;
         
         if (status is null || employeeId is null) return;
-        var couldAdd = _statusMap.TryAdd(employeeId.Value, status); 
-        if(!couldAdd)
+
+        var couldAdd = _statusMap.TryAdd(employeeId.Value, status);
+        Console.WriteLine(_statusMap[employeeId.Value]);
+        if (!couldAdd)
+        {
             _statusMap[employeeId.Value] = status;
+             Console.WriteLine(_statusMap[employeeId.Value]);
+        }
+        _attendance.TryAdd((int) employeeId, new AttendanceRecord
+        {
+            EmployeeId = (int)employeeId,
+            MeetingId = int.Parse(Id),
+            DateCreated = DateTime.Now,
+            Status = tuple.Item2,
+        });
     }
     
     private Task Save(Dictionary<string, string> values)
@@ -99,17 +112,9 @@ public partial class MeetingPage
         
         _signatures.TryAdd(employeeId, new MeetingSignature
         {
-            DataUrl = values["dataUrl"],
-            MeetingId = int.Parse(Id),
-            EmployeeId = int.Parse(values["employeeId"])
-        });
-        
-
-        _attendance.TryAdd(employeeId, new AttendanceRecord
-        {
             MeetingId = int.Parse(Id),
             EmployeeId = int.Parse(values["employeeId"]),
-            DateCreated = DateTime.Now
+            DataUrl = values["dataUrl"],
         });
         
         return Task.CompletedTask;
@@ -117,7 +122,7 @@ public partial class MeetingPage
 
     private void SendToServer()
     {
-        if (MeetingEnvoy is null || SignatureEnvoy is null) return;
+        if (MeetingEnvoy is null) return;
 
         if (_meeting != null)
         {
@@ -127,35 +132,35 @@ public partial class MeetingPage
             m.Topic = _topic;
             m.Speaker = _speaker;
             m.Company = _company;
-            
             m.ProductTraining = _productTraining;
             m.InternalTraining = _internalTraining;
             m.AssetManagementPresentation = _assetManagementPresentation;
-
-            Console.WriteLine(m.ProductTraining);
-            Console.WriteLine(m.InternalTraining);
-            Console.WriteLine(m.AssetManagementPresentation);
+            Console.WriteLine("Updating meeting");
         }
 
         Task.Run(async () =>
         {
             if (_meeting != null) await MeetingEnvoy.UpdateMeeting(_meeting.FirstOrDefault());
+            Console.WriteLine("Sending Attendance");
         });
         
         _attendance.Values.ToList().ForEach(it =>
         {
             var couldGet = _statusMap.TryGetValue(it.EmployeeId, out var s);
-            it.Status = couldGet ? s : "Office";
+            Console.WriteLine(s);
+            it.Status = couldGet ? s : "Absent";
         });
 
         Task.Run(async () =>
         {
             await MeetingEnvoy.SendAttendanceRegister(_attendance.Values.ToList());
+            Console.WriteLine("Sending Registrations");
         });
         
         Task.Run(async () =>
         {
             await SignatureEnvoy.AddSignature(_signatures.Values.ToList());
+            Console.WriteLine("Sending Signatures");
         });
     }
 }

@@ -15,8 +15,9 @@ public class AuthenticationEnvoy
    public async Task<string?> Login()
    {
       var t = await JsRuntime.InvokeAsync<string>("sessionStorage.getItem", "token");
-
       if (!string.IsNullOrEmpty(t)) return t;
+
+      Console.WriteLine("Hitting Function");
       var password = await JsRuntime.InvokeAsync<string>("prompt", "Please enter password");
 
       var httpClient = new HttpClient();

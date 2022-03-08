@@ -38,14 +38,14 @@ public class MeetingReportService
             .Where(it => it.MeetingId == meetingId)
             .ToList();
         
-        var sigs = recs?.Select(it => signatures?
-            .OrderByDescending(sig => sig.Id)
-            .FirstOrDefault(s => s.EmployeeId == it.EmployeeId && s.MeetingId == it.MeetingId))
-            .ToList();
-        
         var emps = recs?
             .Select(it => employees?
                 .FirstOrDefault(e => e.Id == it.EmployeeId))
+            .ToList();
+        
+        var sigs = recs?.Select(it => signatures?
+            .OrderByDescending(sig => sig.Id)
+            .FirstOrDefault(s => s.EmployeeId == it.EmployeeId && s.MeetingId == it.MeetingId))
             .ToList();
         
         var finalReport = recs?
