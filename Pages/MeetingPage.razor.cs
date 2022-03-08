@@ -89,11 +89,9 @@ public partial class MeetingPage
         if (status is null || employeeId is null) return;
 
         var couldAdd = _statusMap.TryAdd(employeeId.Value, status);
-        Console.WriteLine(_statusMap[employeeId.Value]);
         if (!couldAdd)
         {
             _statusMap[employeeId.Value] = status;
-             Console.WriteLine(_statusMap[employeeId.Value]);
         }
         _attendance.TryAdd((int) employeeId, new AttendanceRecord
         {

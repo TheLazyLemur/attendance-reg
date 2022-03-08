@@ -94,7 +94,8 @@ public partial class TestReport
             sb.AppendLine(it.Attendance.Status);
             sb.AppendLine("</td>");
             sb.AppendLine("<td style=\"border: 1px solid black;\">");
-            sb.AppendLine("<img src=\"" + it.Signature?.DataUrl + "\" style=\"height:50px; width:50px; \" alt=\"\">");
+            if (it.Signature != null && !string.IsNullOrEmpty(it.Signature.DataUrl))
+              sb.AppendLine("<img src=\"" + it.Signature?.DataUrl + "\" style=\"height:50px; width:50px; \" alt=\"\">");
             sb.AppendLine("</td>");
             sb.AppendLine("</tr>");
         });
