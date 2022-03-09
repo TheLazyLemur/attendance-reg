@@ -53,8 +53,7 @@ public partial class TestReport
         if (modalResult.Cancelled)
             return;
 
-        var emailAddress = modalResult.Data as string;
-        if (Meeting != null && FinalReports != null && emailAddress != null)
+        if (Meeting != null && FinalReports != null && modalResult.Data is string emailAddress)
         {
             var x = BuildHtml(Meeting.FirstOrDefault(), FinalReports);
             var n = Meeting.FirstOrDefault()?.Name;
@@ -67,19 +66,21 @@ public partial class TestReport
     {
         var sb = new StringBuilder();
 
-        sb.Append("<img style=\"height:100px;\" src=\"https://holborn-report.netlify.app/img/holborn.png\">");
+        sb.Append("<img style=\"height:100px; padding-top:50px; padding-bottom:50px\" src=\"https://holborn-report.netlify.app/img/holborn.png\">");
+
+        sb.Append("<div style=\"padding-bottom:50px;\">");
         sb.Append("<div> Name: " + meeting?.Name + "</div>");
         sb.Append("<div> Speaker: " + meeting?.Speaker + "</div>");
         sb.Append("<div> Topic: " + meeting?.Topic + "</div>");
         sb.Append("<div> Company: " + meeting?.Company + "</div>");
+        sb.Append("</div>");
 
-        sb.Append("<label for=\"asset-management\">Asset Management Presentation</label>");
-           sb.Append(
-               $"<input id=\"asset-management\" type=\"checkbox\" checked=\"{meeting?.AssetManagementPresentation.Value}\" class=\"text-xl\"/>");
-        
-        sb.Append("<div> Asset Management Presentation: " + meeting?.AssetManagementPresentation + "</div>");
-        sb.Append("<div> Asset Management Product Training: " + meeting?.ProductTraining + "</div>");
-        sb.Append("<div> Asset Management Internal Training: " + meeting?.InternalTraining + "</div>");
+        if (meeting?.AssetManagementPresentation is true)
+            sb.Append("<div> Asset Management Presentation: " + meeting.AssetManagementPresentation + "</div>");
+        if (meeting?.ProductTraining is true)
+            sb.Append("<div> Asset Management Product Training: " + meeting.ProductTraining + "</div>");
+        if (meeting?.InternalTraining is true)
+            sb.Append("<div> Asset Management Internal Training: " + meeting.InternalTraining + "</div>");
         
         sb.AppendLine("<table style=\"width:100%\">");
         sb.AppendLine("<tr style=\"border: 1px solid black;\">");

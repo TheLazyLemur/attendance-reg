@@ -4,6 +4,7 @@ public class SupabaseResources
 {
    public const string SupabaseUrl = "https://iwlwjefntcdkcpryuepx.supabase.co/rest/v1";
    public const string EmployeeTable = "employee";
+   public const string EmailTable = "email";
    public const string MeetingTable = "meeting";
    public const string SignatureTable = "meeting_signature";
    public const string Status = "status";

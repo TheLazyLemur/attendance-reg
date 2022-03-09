@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace attendance_reg.Pages.Envoys;
 
@@ -35,38 +36,22 @@ public class Root
 
 public class EmailEnvoy
 {
-   public async Task Send(string to, string subject, string content)
-   {
-      var email = new Root
-      {
-         Personalizations = new List<Personalization>
-         {
-            new()
-            {
-               To = new List<To> { new() { Email = to } },
-               Subject = subject
-            }
-         },
-         From = new From {Email = "test@test.com"},
-         Content = new List<Content>
-         {
-            new()
-            {
-               Type = "text/html",
-               Value = content
-            }
-         }
-      };
+    private readonly SupabaseEnvoy _supabaseEnvoy;
+    private readonly AppState _appState;
 
-      var client = new HttpClient();
-      var request = new HttpRequestMessage
-      {
-         Method = HttpMethod.Post,
-         RequestUri = new Uri("https://holborn-za-attendance.netlify.app/.netlify/functions/email"),
-         Content = new StringContent(JsonSerializer.Serialize(email))
-      };
-      
-      using var response = await client.SendAsync(request);
-      response.EnsureSuccessStatusCode();
+    public EmailEnvoy(SupabaseEnvoy supabaseEnvoy, AppState appState)
+    {
+       _supabaseEnvoy = supabaseEnvoy;
+       _appState = appState;
+    }
+
+    public async Task Save(string to, string subject, string content)
+    {
+        await _supabaseEnvoy.Post(SupabaseResources.EmailTable, new {to =to,subject = subject,  content = content, sent = false});
+    }
+
+    public async Task Send(string to, string subject, string content)
+    {
+       await Save(to, subject, content);
    }
 }
