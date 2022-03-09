@@ -67,10 +67,19 @@ public partial class TestReport
     {
         var sb = new StringBuilder();
 
-        sb.Append("<h4> Name: " + meeting?.Name + "</h4>");
-        sb.Append("<h4> Speaker: " + meeting?.Speaker + "</h4>");
-        sb.Append("<h4> Topic: " + meeting?.Topic + "</h4>");
-        sb.Append("<h4> Company: " + meeting?.Company + "</h4>");
+        sb.Append("<img style=\"height:100px;\" src=\"https://holborn-report.netlify.app/img/holborn.png\">");
+        sb.Append("<div> Name: " + meeting?.Name + "</div>");
+        sb.Append("<div> Speaker: " + meeting?.Speaker + "</div>");
+        sb.Append("<div> Topic: " + meeting?.Topic + "</div>");
+        sb.Append("<div> Company: " + meeting?.Company + "</div>");
+
+        sb.Append("<label for=\"asset-management\">Asset Management Presentation</label>");
+           sb.Append(
+               $"<input id=\"asset-management\" type=\"checkbox\" checked=\"{meeting?.AssetManagementPresentation.Value}\" class=\"text-xl\"/>");
+        
+        sb.Append("<div> Asset Management Presentation: " + meeting?.AssetManagementPresentation + "</div>");
+        sb.Append("<div> Asset Management Product Training: " + meeting?.ProductTraining + "</div>");
+        sb.Append("<div> Asset Management Internal Training: " + meeting?.InternalTraining + "</div>");
         
         sb.AppendLine("<table style=\"width:100%\">");
         sb.AppendLine("<tr style=\"border: 1px solid black;\">");
@@ -95,7 +104,7 @@ public partial class TestReport
             sb.AppendLine("</td>");
             sb.AppendLine("<td style=\"border: 1px solid black;\">");
             if (it.Signature != null && !string.IsNullOrEmpty(it.Signature.DataUrl))
-              sb.AppendLine("<img src=\"" + it.Signature?.DataUrl + "\" style=\"height:50px; width:50px; \" alt=\"\">");
+                sb.AppendLine("<img src=\"" + it.Signature?.DataUrl + "\" style=\"height:50px; width:50px; \" alt=\"\">");
             sb.AppendLine("</td>");
             sb.AppendLine("</tr>");
         });

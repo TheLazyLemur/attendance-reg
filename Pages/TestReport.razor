@@ -9,6 +9,14 @@
                 <h1 class="text-3xl">@Meeting.FirstOrDefault()?.Name</h1>
                 <h2 class="text-xl">Speaker: @Meeting.FirstOrDefault()?.Speaker</h2>
                 <p class="text-xl">Topic: @Meeting.FirstOrDefault()?.Topic</p>
+                <div class="flex space-x-5">
+                    <label for="asset-management">Asset Management Presentation</label>
+                    <input id="asset-management" type="checkbox" checked="@Meeting.FirstOrDefault()?.AssetManagementPresentation" class="text-xl"/>
+                    <label for="product-training">Product Training</label>
+                    <input id="product-training" type="checkbox" checked="@Meeting.FirstOrDefault()?.ProductTraining" class="text-xl"/>
+                    <label for="internal-training">Internal Training</label>
+                    <input id="internal-training" type="checkbox" checked="@Meeting.FirstOrDefault()?.InternalTraining" class="text-xl"/>
+                </div>
             </div>
         }
         else
