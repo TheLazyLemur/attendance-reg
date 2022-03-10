@@ -76,11 +76,11 @@ public partial class TestReport
         sb.Append("</div>");
 
         if (meeting?.AssetManagementPresentation is true)
-            sb.Append("<div> Asset Management Presentation: " + meeting.AssetManagementPresentation + "</div>");
+            sb.Append("<div> Asset Management Presentation" +"</div>");
         if (meeting?.ProductTraining is true)
-            sb.Append("<div> Asset Management Product Training: " + meeting.ProductTraining + "</div>");
+            sb.Append("<div> Asset Management Product Training" + "</div>");
         if (meeting?.InternalTraining is true)
-            sb.Append("<div> Asset Management Internal Training: " + meeting.InternalTraining + "</div>");
+            sb.Append("<div> Asset Management Internal Training" + "</div>");
         
         sb.AppendLine("<table style=\"width:100%\">");
         sb.AppendLine("<tr style=\"border: 1px solid black;\">");

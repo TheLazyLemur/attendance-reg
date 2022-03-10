@@ -9,14 +9,9 @@ public class EmailEnvoy
        _supabaseEnvoy = supabaseEnvoy;
     }
 
-    public async Task Save(string to, string subject, string content)
+    public async Task Send(string to, string subject, string content)
     {
         await _supabaseEnvoy.Post(SupabaseResources.EmailTable,
             new {to = to, subject = subject, content = content, sent = false});
     }
-
-    public async Task Send(string to, string subject, string content)
-    {
-       await Save(to, subject, content);
-   }
 }
