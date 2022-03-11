@@ -10,9 +10,12 @@
                 {
                     @foreach (var office in Offices.OrderByDescending(it => it.Name?.Length))
                     {
-                        <div class="text-xl">
-                            <button class="hover:text-blue-500" @onclick="@(() => {AppState?.SaveOfficeId(office.Id.ToString());NavigationManager?.NavigateTo("dashboard");})">@office.Name Office</button>
-                        </div>
+                        @if (office.Name.ToLower() != "demo office")
+                        {
+                            <div class="text-xl">
+                                <button class="hover:text-blue-500" @onclick="@(() => {AppState?.SaveOfficeId(office.Id.ToString());NavigationManager?.NavigateTo("dashboard");})">@office.Name Office</button>
+                            </div>
+                        }
                     }
                 }
                 else
