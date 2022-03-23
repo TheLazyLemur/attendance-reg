@@ -33,7 +33,7 @@
     [Inject]
     public IJSRuntime? JsRuntime { get; set; }
 
-    private string? _value = "Zoom";
+    private string? _value = "Undefined";
 
     protected override async void OnInitialized()
     {
@@ -44,7 +44,7 @@
         if(regs is null) return;
         
         regs = regs.OrderByDescending(it => it.Id).Where(it => it.EmployeeId == EmployeeId && it.MeetingId == MeetingId).ToList();
-        _value = string.IsNullOrEmpty(regs.FirstOrDefault()?.Status) ? "Zoom" : regs.FirstOrDefault()?.Status;
+        _value = string.IsNullOrEmpty(regs.FirstOrDefault()?.Status) ? "Undefined" : regs.FirstOrDefault()?.Status;
         
         StateHasChanged();
     }
