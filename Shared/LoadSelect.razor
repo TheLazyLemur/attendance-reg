@@ -45,7 +45,7 @@
         
         regs = regs.OrderByDescending(it => it.Id).Where(it => it.EmployeeId == EmployeeId && it.MeetingId == MeetingId).ToList();
         _value = string.IsNullOrEmpty(regs.FirstOrDefault()?.Status) ? "Undefined" : regs.FirstOrDefault()?.Status;
-        
+        Console.WriteLine(regs.FirstOrDefault()?.Status);
         StateHasChanged();
     }
 
