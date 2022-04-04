@@ -4,6 +4,10 @@
     <div class="space-y-3 w-full">
         <h1 class="mt-5 text-3xl">Meetings</h1>
         <div class="mt-5 space-y-3  overflow-auto">
+                    <div class="my-5 flex space-x-5">
+            <button @onclick="@(async () => { await ShowAddMeeting(); })" class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300">New Meeting</button>
+            <button @onclick="@(() => { NavigationManager?.NavigateTo("admin"); })" class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg border-white border-4 hover:border-blue-300 focus:border-blue-300">Admin</button>
+        </div>
             @if (Meetings is not null)
             {
                 if (Meetings.Any())
