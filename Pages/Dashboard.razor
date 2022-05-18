@@ -25,7 +25,7 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
 
-                        @foreach (var meeting in Meetings)
+                        @foreach (var meeting in Meetings.OrderByDescending(x => x.MeetingDate))
                         {
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
