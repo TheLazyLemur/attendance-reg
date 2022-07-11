@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using attendance_reg.Pages.Envoys;
 using attendance_reg.Shared;
@@ -73,7 +74,7 @@ public partial class TestReport
         sb.Append("<div> Speaker: " + meeting?.Speaker + "</div>");
         sb.Append("<div> Topic: " + meeting?.Topic + "</div>");
         sb.Append("<div> Company: " + meeting?.Company + "</div>");
-        sb.Append("<div> Date: " + meeting?.MeetingDate + "</div>");
+        sb.Append("<div> Date: " + meeting?.MeetingDate.ToString(CultureInfo.InvariantCulture) + "</div>");
         sb.Append("</div>");
 
         if (meeting?.AssetManagementPresentation is true)
