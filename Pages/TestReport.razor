@@ -9,6 +9,7 @@
                 <h1 class="text-3xl">@Meeting.FirstOrDefault()?.Name</h1>
                 <h2 class="text-xl">Speaker: @Meeting.FirstOrDefault()?.Speaker</h2>
                 <p class="text-xl">Topic: @Meeting.FirstOrDefault()?.Topic</p>
+                <p class="text-xl">Date: @Meeting.FirstOrDefault().?MeetingDate</p>
                 <div class="flex space-x-5">
                     <label for="asset-management">Asset Management Presentation</label>
                     <input id="asset-management" type="checkbox" checked="@Meeting.FirstOrDefault()?.AssetManagementPresentation" class="text-xl"/>
